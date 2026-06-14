@@ -1,0 +1,86 @@
+const DetalleMovimiento = require('../models/detallemovimiento.model');
+const Producto = require('../models/producto.model');
+const Persona = require('../models/persona.model');
+const detalleMovimientoCtrl = {};
+// Obtener todas las compras
+detalleMovimientoCtrl.getDetallesMovimiento = async (req, res) => {
+  try {
+    const detallesMovimiento = await DetalleMovimiento.findAll(
+      {
+        attributes: { exclude: ['personaId', 'productoId'] },
+        include: [
+          { model: Producto, as: 'producto' },
+          { model: Persona, as: 'persona' }
+        ]
+      }
+    );
+    res.json(detallesMovimiento);
+  } catch (error) {
+    res.status(500).json({ status: '0', msg: 'Error al obtener las detalles.'+error });
+  }
+}
+// Crear una nueva compra
+detalleMovimientoCtrl.createDetalleMovimiento = async (req, res) => {
+  try {
+    if (req.body.persona && req.body.persona.id){
+      req.body.personaId = req.body.persona.id;
+    }
+    if (req.body.producto && req.body.producto.id){
+      req.body.productoId = req.body.producto.id;
+    }    
+    await DetalleMovimiento.create(req.body);
+    res.json({ status: '1', msg: 'Detalle guardada.' });
+  } catch (error) {
+    res.status(400).json({ status: '0', msg: 'Error procesando operacion.' });
+  }
+}
+// Obtener una compra por ID
+detalleMovimientoCtrl.getDetalleMovimiento = async (req, res) => {
+  try {
+    const detalleMovimiento = await DetalleMovimiento.findByPk(req.params.id,
+      {
+        attributes: { exclude: ['personaId', 'productoId'] },
+        include: [
+          { model: Producto, as: 'producto' },
+          { model: Persona, as: 'persona' }
+        ]      
+      }
+
+    );
+    if (!detalleMovimiento) {
+      return res.status(404).json({ status: '0', msg: 'Detalle no encontrada.' });
+    }
+    res.json(detalleMovimiento);
+  } catch (error) {
+    res.status(500).json({ status: '0', msg: 'Error al obtener la detalle.' });
+  }
+};
+// Editar una compra
+detalleMovimientoCtrl.editDetalleMovimiento = async (req, res) => {
+  try {
+    if (req.body.persona && req.body.persona.id){
+      req.body.personaId = req.body.persona.id;
+    }
+    if (req.body.producto && req.body.producto.id){
+      req.body.productoId = req.body.producto.id;
+    }    
+    await DetalleMovimiento.update(req.body, {
+      where: { id: req.body.id }
+    });
+    res.json({ status: '1', msg: 'detalle updated' });
+  } catch (error) {
+    res.status(400).json({ status: '0', msg: 'Error procesando la operacion' });
+  }
+};
+// Eliminar una compra
+detalleMovimientoCtrl.deleteDetalleMovimiento = async (req, res) => {
+  try {
+    await DetalleMovimiento.destroy({
+      where: { id: req.params.id }
+    });
+    res.json({ status: '1', msg: 'Detalle removed' });
+  } catch (error) {
+    res.status(400).json({ status: '0', msg: 'Error procesando la operacion' });
+  }
+};
+module.exports = detalleMovimientoCtrl;
