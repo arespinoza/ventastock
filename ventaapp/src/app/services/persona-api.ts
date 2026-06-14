@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class PersonaApi {
-  private hostbase = 'http://localhost:3000/';
+  private hostbase = 'http://10.3.2.189:3000/';
   private urlbase = this.hostbase + 'api/persona';
   constructor(private http: HttpClient) { } 
 

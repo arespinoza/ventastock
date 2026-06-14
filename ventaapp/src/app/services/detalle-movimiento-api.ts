@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class DetalleMovimientoApi {
-  private hostbase = 'http://localhost:3000/';
+  private hostbase = 'http://10.3.2.189:3000/';
   private urlbase = this.hostbase + 'api/detallemovimiento/';  
   constructor(private http: HttpClient){
 
