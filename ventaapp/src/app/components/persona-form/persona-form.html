@@ -1,0 +1,70 @@
+<div class="container mt-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/home">Home</a></li>
+            <li class="breadcrumb-item"><a href="/persona-list">Personas</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Formulario</li>
+        </ol>
+    </nav>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3>Formulario de Persona</h3>
+                </div>
+                <div class="card-body">
+                    <form #personaForm="ngForm">
+                        <!-- Campo DNI -->
+                        <div class="mb-3">
+                            <label for="dni" class="form-label">DNI</label>
+                            <input type="text" class="form-control" id="dni" name="dni" placeholder="Ej: 12345678" [(ngModel)]="persona.dni" required>
+                        </div>
+
+                        <!-- Campo Apellido -->
+                        <div class="mb-3">
+                            <label for="apellido" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Ej: Perez" [(ngModel)]="persona.apellido" required>
+                        </div>
+
+                        <!-- Campo Nombres -->
+                        <div class="mb-3">
+                            <label for="nombres" class="form-label">Nombres</label>
+                            <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Ej: Juan Carlos" [(ngModel)]="persona.nombres" required>
+                        </div>
+
+                        <!-- Campo Referencia -->
+                        <div class="mb-3">
+                            <label for="referencia" class="form-label">Referencia</label>
+                            <input type="text" class="form-control" id="referencia" name="referencia" placeholder="Ej: Cliente frecuente" [(ngModel)]="persona.referencia">
+                        </div>
+
+                        <!-- Campo Correo Electrónico -->
+                        <div class="mb-3">
+                            <label for="correo_electronico" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="correo_electronico" name="correo_electronico" placeholder="Ej: juan.perez@example.com" [(ngModel)]="persona.correo_electronico">
+                        </div>
+
+                        <!-- Campo Número de Celular -->
+                        <div class="mb-3">
+                            <label for="nro_celular" class="form-label">Número de Celular</label>
+                            <input type="text" class="form-control" id="nro_celular" name="nro_celular" placeholder="Ej: 987654321" [(ngModel)]="persona.nro_celular">
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex gap-2">
+                            <button *ngIf="accion == 'agregar'" type="button" class="btn btn-success" (click)="agregarPersona()">
+                                <i class="bi bi-plus-circle"></i> Agregar
+                            </button>
+                            <button *ngIf="accion == 'modificar'" type="button" class="btn btn-warning" (click)="modificarPersona()">
+                                <i class="bi bi-pencil-square"></i> Modificar
+                            </button>
+                            <button type="button" class="btn btn-secondary" (click)="salir()">
+                                <i class="bi bi-box-arrow-right"></i> Salir
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

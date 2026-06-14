@@ -1,0 +1,134 @@
+  <div class="container mt-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/home">Home</a></li>
+            <li class="breadcrumb-item"><a href="/detalle-movimiento-list">Movimientos</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Formulario</li>
+        </ol>
+    </nav>
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h3>Formulario de Movimiento</h3>
+      </div>
+      <div class="card-body">
+        <form #detalleMovimientoForm="ngForm">
+          <!-- Fila para ID y Fecha -->
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <div class="btn-group" role="group" aria-label="Tipo de Movimiento">
+                <input type="radio" class="btn-check" name="tipo"
+                  id="tipoCompra" value="compra" autocomplete="off"
+                  [(ngModel)]="detalleMovimiento.tipo" (ngModelChange)="calcularSubtotal()">
+                <label class="btn btn-outline-primary" for="tipoCompra">Compra</label>
+                
+                <input type="radio" class="btn-check" name="tipo"
+                  id="tipoVenta" value="venta" autocomplete="off"
+                  [(ngModel)]="detalleMovimiento.tipo" (ngModelChange)="calcularSubtotal()">
+                <label class="btn btn-outline-primary" for="tipoVenta">Venta</label>
+              </div>
+            </div>            
+            <div class="col-md-4">
+              <label for="fecha" class="form-label">Fecha</label>
+              <input type="date" class="form-control"
+                id="fecha" name="fecha" [(ngModel)]="detalleMovimiento.fecha">
+            </div>
+          </div>
+
+          <!-- Fila para Producto y Razón Social -->
+           <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="producto" class="form-label">Producto</label>
+              <input class="form-control" list="productos-list" 
+                    id="producto" name="producto" 
+                    placeholder="Escriba para buscar un producto..."
+                    [(ngModel)]="productoSeleccionadoTexto"
+                    (change)="onProductoSeleccionado()">
+              <datalist id="productos-list">
+                <!-- Las opciones se deberían cargar dinámicamente desde tu backend -->
+                <option *ngFor="let producto of productos" [value]="producto.nombre"></option>
+              </datalist>
+            </div>
+            <div class="col-md-6">
+              <label for="persona" class="form-label">Razón Social (Proveedor/Cliente)</label>
+              <input class="form-control" list="personas-list"
+                     id="persona" name="persona"
+                     placeholder="Escriba para buscar una persona..."
+                     [(ngModel)]="personaSeleccionadaTexto"
+                     (change)="onPersonaSeleccionada()">
+              <datalist id="personas-list">
+                <option *ngFor="let p of personas" [value]="p.apellido + ' ' + p.nombres"></option>
+              </datalist>
+            </div>
+          </div>
+
+          <!-- Fila para Cantidad y Precios -->
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <label for="cantidad" class="form-label">Cantidad</label>
+              <input type="number" class="form-control" id="cantidad"
+                name="cantidad" placeholder="0" min="0"
+                [(ngModel)]="detalleMovimiento.cantidad"
+                (ngModelChange)="calcularSubtotal()">
+            </div>
+            <div class="col-md-3">
+              <label for="preciocompra" class="form-label">Precio de Compra</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" class="form-control" id="preciocompra"
+                  name="preciocompra" placeholder="0.00" step="0.01" min="0" 
+                  [(ngModel)]="detalleMovimiento.preciocompra" [disabled]="detalleMovimiento.tipo != 'compra'"
+                  [ngClass]="{'bg-secondary-subtle': detalleMovimiento.tipo != 'compra'}"
+                  [ngClass]="{'bg-success-subtle': detalleMovimiento.tipo == 'compra'}"
+                  (ngModelChange)="calcularSubtotal()">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="precioventa" class="form-label">Precio de Venta</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" class="form-control" id="precioventa" 
+                  name="precioventa" placeholder="0.00" step="0.01" min="0"
+                  [(ngModel)]="detalleMovimiento.precioventa"   [disabled]="detalleMovimiento.tipo != 'venta'"
+                  [ngClass]="{'bg-secondary-subtle': detalleMovimiento.tipo != 'venta'}"
+                  [ngClass]="{'bg-success-subtle': detalleMovimiento.tipo == 'venta'}"
+                  (ngModelChange)="calcularSubtotal()">
+              </div>
+            </div>
+             <div class="col-md-3">
+              <label for="subtotal" class="form-label">Subtotal</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" class="form-control bg-success-subtle" id="subtotal" 
+                  name="subtotal" placeholder="0.00" readonly
+                  [(ngModel)]="detalleMovimiento.subtotal">
+              </div>
+            </div>
+          </div>
+
+          <!-- Fila para Estado -->
+          <div class="row mb-4">
+            <div class="col-md-12">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="estado" name="estado" 
+                  [(ngModel)]="detalleMovimiento.estado">
+                <label class="form-check-label" for="estado">
+                  Movimiento Activo
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botones de Acción -->
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-secondary me-2" (click)="redirigir('/detalle-movimiento-list')">Cancelar</button>
+            <!-- Estos botones se pueden mostrar/ocultar condicionalmente -->
+            <button type="submit" class="btn btn-success me-2"
+              *ngIf="accion=='agregar'" (click)="guardarDetalleMovimiento()">Agregar</button>
+            <button type="submit" class="btn btn-warning"
+              *ngIf="accion=='modificar'" (click)="actualizarDetalleMovimiento()">Modificar</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>

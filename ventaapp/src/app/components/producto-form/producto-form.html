@@ -1,0 +1,78 @@
+<div class="container mt-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/home">Home</a></li>
+            <li class="breadcrumb-item"><a href="/producto-list">Productos</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Formulario</li>
+        </ol>
+    </nav>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3>Formulario de Producto</h3>
+                </div>
+                <div class="card-body">
+                    <form #productoForm="ngForm">
+                        <!-- Campo Nombre -->
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre del Producto</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ej: Teclado Mecánico RGB" [(ngModel)]="producto.nombre" required>
+                        </div>
+
+                        <!-- Campo Categoría -->
+                        <div class="mb-3">
+                            <label for="categoria" class="form-label">Categoría</label>
+                            <input type="text" class="form-control" id="categoria" name="categoria" placeholder="Ej: Periféricos" [(ngModel)]="producto.categoria" required>
+                        </div>
+
+                        <div class="row">
+                            <!-- Campo Precio -->
+                            <div class="col-md-6 mb-3">
+                                <label for="preciocompra" class="form-label">Precio Compra</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="preciocompra" name="preciocompra" placeholder="0.00" [(ngModel)]="producto.preciocompra" required min="0">
+                                </div>
+                            </div>
+
+                            <!-- Campo Precio Venta -->
+                            <div class="col-md-6 mb-3">
+                                <label for="precioventa" class="form-label">Precio Venta</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="precioventa" name="precioventa" placeholder="0.00" [(ngModel)]="producto.precioventa" required min="0">
+                                </div>
+                            </div>
+
+                            <!-- Campo Stock -->
+                            <div class="col-md-6 mb-3">
+                                <label for="stock" class="form-label">Stock</label>
+                                <input type="number" class="form-control" id="stock" name="stock" placeholder="0" [(ngModel)]="producto.stock" required min="0">
+                            </div>
+                        </div>
+
+                        <!-- Campo Estado (con un switch de Bootstrap) -->
+                        <div class="form-check form-switch mb-4">
+                            <input class="form-check-input" type="checkbox" role="switch" id="estado" name="estado" [(ngModel)]="producto.estado">
+                            <label class="form-check-label" for="estado">Estado (Activo / Inactivo)</label>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-success" (click)="agregarProducto()">
+                                <i class="bi bi-plus-circle"></i> Agregar
+                            </button>
+                            <button type="button" class="btn btn-warning" (click)="modificarProducto()">
+                                <i class="bi bi-plus-circle"></i> Modificar
+                            </button>
+                            <button type="button" class="btn btn-secondary" (click)="salir()">
+                                <i class="bi bi-box-arrow-right"></i> Salir
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
