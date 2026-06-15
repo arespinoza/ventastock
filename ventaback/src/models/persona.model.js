@@ -5,7 +5,7 @@ const Persona = sequelize.define('Persona', {
   apellido: { type: DataTypes.STRING(50), allowNull: false },
   nombres: { type: DataTypes.STRING(50), allowNull: false },
   referencia: { type: DataTypes.STRING(100), allowNull: true },
-  correo_electronico: {type: DataTypes.STRING(100), allowNull: true, unique: true, validate: { isEmail: true }},
+  correo_electronico: {type: DataTypes.STRING(100), allowNull: true},
   nro_celular: { type: DataTypes.STRING(15), allowNull: true },
 }, {
   tableName: 'personas',
