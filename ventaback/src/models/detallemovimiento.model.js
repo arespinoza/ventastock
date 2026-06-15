@@ -10,7 +10,7 @@ const DetalleMovimiento = sequelize.define('DetalleMovimiento', {
     subtotal: {type: DataTypes.DECIMAL(10, 2), allowNull: false},
     tipo: {type: DataTypes.STRING, allowNull: false},
     fecha: {type: DataTypes.DATE, allowNull: false},
-    estado: {type: DataTypes.BOOLEAN, allowNull: false},
+    convalidado: {type: DataTypes.BOOLEAN, allowNull: false},
     razonsocial: {type: DataTypes.STRING, allowNull: true}
 }, {
     tableName: 'detalles_movimiento',
