@@ -77,7 +77,7 @@ personaCtrl.editPersona = async (req, res) => {
 personaCtrl.deletePersona = async (req, res) => {
   try {
     const deletedRows = await Persona.destroy({
-      where: { id_persona: req.params.id } // Use id_persona as primary key
+      where: { id: req.params.id } // Use id_persona as primary key
     });
 
     if (deletedRows === 0) {

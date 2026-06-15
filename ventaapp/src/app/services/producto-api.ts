@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/internal/Observable';
 })
 export class ProductoApi {
 
-  private hostbase = 'http://10.3.2.189:3000/';
+  private hostbase = 'https://aplicaciones.fce.unju.edu.ar/ventasapi/';
   private urlbase = this.hostbase + 'api/producto';
   constructor(private http: HttpClient) { } 
 
