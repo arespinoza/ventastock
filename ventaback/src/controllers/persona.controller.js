@@ -60,7 +60,7 @@ personaCtrl.getPersona = async (req, res) => {
 personaCtrl.editPersona = async (req, res) => {
   try {
     const [updatedRows] = await Persona.update(req.body, {
-      where: { id_persona: req.body.id_persona } // Use id_persona as primary key
+      where: { id: req.body.id }
     });
 
     if (updatedRows === 0) {
@@ -77,7 +77,7 @@ personaCtrl.editPersona = async (req, res) => {
 personaCtrl.deletePersona = async (req, res) => {
   try {
     const deletedRows = await Persona.destroy({
-      where: { id: req.params.id } // Use id_persona as primary key
+      where: { id: req.params.id } 
     });
 
     if (deletedRows === 0) {
