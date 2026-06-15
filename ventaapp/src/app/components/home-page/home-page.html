@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
     <div class="container-fluid">
-      <a class="navbar-brand" routerLink="/">
+      <a class="navbar-brand" (click)="navigateTo('/')">
         <i class="bi bi-shop"></i> VentaApp
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -9,7 +9,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" routerLink="/productos" routerLinkActive="active">Productos</a>
+            <a class="nav-link" (click)="navigateTo('producto-list')">Productos</a>
           </li>
         </ul>
       </div>
@@ -26,7 +26,7 @@
       <!-- Tarjeta de Clientes -->
       <div class="col-md-4 mb-4">
         <div class="card h-100 shadow-hover" (click)="navigateTo('persona-list')">
-          <a routerLink="/persona-list" class="card-body text-decoration-none">
+          <a class="card-body text-decoration-none">
             <i class="bi bi-people-fill display-3 text-info"></i>
             <h3 class="card-title mt-3">Clientes</h3>
             <p class="card-text">Gestionar la información de los clientes.</p>
@@ -37,7 +37,7 @@
       <!-- Tarjeta de Productos -->
       <div class="col-md-4 mb-4">
         <div class="card h-100 shadow-hover" (click)="navigateTo('producto-list')">
-          <a routerLink="/producto-list" class="card-body text-decoration-none">
+          <a  class="card-body text-decoration-none">
             <i class="bi bi-box-seam display-3 text-primary"></i>
             <h3 class="card-title mt-3">Productos</h3>
             <p class="card-text">Gestionar inventario, precios y categorías.</p>
@@ -48,7 +48,7 @@
       <!-- Tarjeta de Movimientos/Compras -->
       <div class="col-md-4 mb-4">
         <div class="card h-100 shadow-hover" (click)="navigateTo('detalle-movimiento-list')">
-          <a routerLink="/compras" class="card-body text-decoration-none">
+          <a  class="card-body text-decoration-none">
             <i class="bi bi-receipt-cutoff display-3 text-success"></i>
             <h3 class="card-title mt-3">Movimientos</h3>
             <p class="card-text">Registrar compras y gestionar transacciones.</p>

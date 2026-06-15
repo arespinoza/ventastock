@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { ProductoApi } from '../../services/producto-api';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-producto-list',
@@ -39,5 +39,9 @@ export class ProductoList {
         this.cd.detectChanges();
       });
     }
+  }
+
+  redirigir(path: string){
+    this.router.navigate([path]);
   }
 }

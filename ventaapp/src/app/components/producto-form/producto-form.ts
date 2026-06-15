@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Producto } from '../../models/producto';
 import { ProductoApi } from '../../services/producto-api';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-producto-form',
@@ -84,5 +84,9 @@ export class ProductoForm {
   }
   salir() {
     this.router.navigate(['/producto-list']);
+  }
+
+  redirigir(path: string){
+    this.router.navigate([path]);
   }
 }

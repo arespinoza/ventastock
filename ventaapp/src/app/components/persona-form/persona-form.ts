@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PersonaApi } from '../../services/persona-api';
 import { Persona } from '../../models/persona';
 import { CommonModule } from '@angular/common';
@@ -84,7 +84,10 @@ export class PersonaForm {
     );
   }
   salir() {
-    this.router.navigate(['/persona-list']);
+    this.router.navigate(['persona-list']);
   }
-
+  redirigir(path: string){
+    console.log(path);
+    this.router.navigate([path]);
+  }
 }

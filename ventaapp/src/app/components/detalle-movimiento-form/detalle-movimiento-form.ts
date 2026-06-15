@@ -4,7 +4,7 @@ import { Producto } from '../../models/producto';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DetalleMovimiento } from '../../models/detalle-movimiento';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PersonaApi } from '../../services/persona-api';
 import { Persona } from '../../models/persona';
 import { DetalleMovimientoApi } from '../../services/detalle-movimiento-api';

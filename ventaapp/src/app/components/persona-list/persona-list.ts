@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { PersonaApi } from '../../services/persona-api';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Persona } from '../../models/persona';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -41,5 +41,9 @@ export class PersonaList {
         this.cd.detectChanges();
       });
     }
-  }              
+  }     
+  
+  redirigir(path: string){
+    this.router.navigate([path]);
+  }
 }

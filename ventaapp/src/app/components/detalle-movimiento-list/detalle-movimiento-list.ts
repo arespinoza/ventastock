@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { DetalleMovimientoApi } from '../../services/detalle-movimiento-api';
 import { DetalleMovimiento } from '../../models/detalle-movimiento';
 import { CommonModule } from '@angular/common';
@@ -43,5 +43,9 @@ export class DetalleMovimientoList {
         this.cd.detectChanges();
       });
     }
+  }
+
+    redirigir(path: string){
+    this.router.navigate([path]);
   }
 }
