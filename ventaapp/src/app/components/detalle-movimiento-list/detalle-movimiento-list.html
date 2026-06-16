@@ -38,8 +38,8 @@
                     <td>
                         {{dm.producto.nombre}} 
                         [<span [ngClass]="{
-                            'text-danger': dm.estadopago === 'pendiente',
-                            'text-success': dm.estadopago === 'pagado'
+                            'text-danger fw-bold': dm.estadopago === 'pendiente',
+                            'text-success fw-bold': dm.estadopago === 'pagado'
                         }">{{dm.estadopago}}</span>]
                     </td>
                     <td>{{dm.cantidad}}</td>
