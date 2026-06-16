@@ -41,6 +41,9 @@ export class DetalleMovimientoForm {
       let id = params['id'];
       if (id == 0) {
         this.accion = "agregar";
+      // Convierte a formato ISO (YYYY-MM-DDTHH:mm:ss...) y extrae solo la fecha
+      this.detalleMovimiento.fecha = new Date().toISOString().split('T')[0];
+      this.cd.detectChanges()
       }
       else {
         this.accion = "modificar";

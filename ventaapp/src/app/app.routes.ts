@@ -16,5 +16,7 @@ export const routes: Routes = [
     { path: 'persona-form/:id', component: PersonaForm },
     { path: 'detalle-movimiento-list', component: DetalleMovimientoList },
     { path: 'detalle-movimiento-form/:id', component: DetalleMovimientoForm },   
-    { path: '', redirectTo: 'home', pathMatch: 'full' }
+    { path: '', redirectTo: 'home', pathMatch: 'full' },
+    { path: '**', redirectTo: 'home', pathMatch: 'full' }
+
 ];

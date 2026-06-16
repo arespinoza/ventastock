@@ -8,8 +8,8 @@ export class DetalleMovimiento {
     precioventa!: number;
     subtotal!: number;
     tipo!: string;
-    fecha!: Date;
-    estado!: boolean;
+    fecha!: string;
+    convalidado!: boolean;
     razonsocial!: string;
     producto!: Producto;
     persona!: Persona;
@@ -20,8 +20,8 @@ export class DetalleMovimiento {
         this.preciocompra = 0;
         this.subtotal = 0;
         this.tipo = "venta";
-        this.fecha = new Date();
-        this.estado = true;
+        this.fecha = "";
+        this.convalidado = true;
         this.razonsocial = "";
         this.producto = new Producto();
         this.persona = new Persona();
