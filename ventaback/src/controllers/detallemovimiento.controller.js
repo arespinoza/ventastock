@@ -27,9 +27,24 @@ detalleMovimientoCtrl.createDetalleMovimiento = async (req, res) => {
     }
     if (req.body.producto && req.body.producto.id){
       req.body.productoId = req.body.producto.id;
-    }    
+    }
+
+    //veo si es una operacion de venta o compra
+    const producto = await Producto.findByPk(req.body.productoId);
+    if (req.body.tipo  == 'venta'){
+      //controlo si hay stock para el producto seleccionado
+      if (producto.stock < req.body.cantidad){
+        return res.status(400).json({ status: '0', msg: 'No hay stock suficiente.' });
+      }
+      producto.stock = producto.stock - req.body.cantidad;
+    }else if(req.body.tipo  == 'compra'){
+      producto.stock = producto.stock + req.body.cantidad;
+    }
+    await producto.save();
     await DetalleMovimiento.create(req.body);
+
     res.json({ status: '1', msg: 'Detalle guardada.' });
+
   } catch (error) {
     res.status(400).json({ status: '0', msg: 'Error procesando operacion.' });
   }
@@ -63,7 +78,7 @@ detalleMovimientoCtrl.editDetalleMovimiento = async (req, res) => {
     }
     if (req.body.producto && req.body.producto.id){
       req.body.productoId = req.body.producto.id;
-    }    
+    }
     await DetalleMovimiento.update(req.body, {
       where: { id: req.body.id }
     });
