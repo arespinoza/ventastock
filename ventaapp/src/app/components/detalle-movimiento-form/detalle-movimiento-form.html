@@ -12,6 +12,7 @@
       </div>
       <div class="card-body">
         <form #detalleMovimientoForm="ngForm">
+
           <!-- Fila para ID y Fecha -->
           <div class="row mb-3">
             <div class="col-md-4">
@@ -26,14 +27,31 @@
                   [(ngModel)]="detalleMovimiento.tipo" (ngModelChange)="calcularSubtotal()">
                 <label class="btn btn-outline-primary" for="tipoVenta">Venta</label>
               </div>
-            </div>            
-            <div class="col-md-4">
-              <label for="fecha" class="form-label">Fecha</label>
-              <input type="date" class="form-control"
-                id="fecha" name="fecha" [(ngModel)]="detalleMovimiento.fecha">
-            </div>
-          </div>
+            </div>  
+            
+            <div class="col-md-4 mt-1">
+              <div class="btn-group" role="group" aria-label="Estado Pago">
+                <input type="radio" class="btn-check" name="estadopago"
+                  id="estadopendiente" value="pendiente" autocomplete="off"
+                  [(ngModel)]="detalleMovimiento.estadopago">
+                <label class="btn btn-outline-success" for="estadopendiente">Pendiente</label>
+                
+                <input type="radio" class="btn-check" name="estadopago"
+                  id="estadopagado" value="pagado" autocomplete="off"
+                  [(ngModel)]="detalleMovimiento.estadopago">
+                <label class="btn btn-outline-success" for="estadopagado">Pagado</label>
+              </div>
+            </div>             
 
+
+          </div>
+          <div class="row mb-3 align-items-center">
+            <label for="fecha" class="col-4 col-form-label">Fecha</label>
+            <div class="col-8">
+              <input type="date" class="form-control form-control-sm"
+                id="fecha" name="fecha" [(ngModel)]="detalleMovimiento.fecha">
+            </div>            
+          </div>
           <!-- Fila para Producto y Razón Social -->
            <div class="row mb-3">
             <div class="col-md-6">

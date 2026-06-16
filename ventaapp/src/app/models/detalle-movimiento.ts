@@ -13,6 +13,7 @@ export class DetalleMovimiento {
     razonsocial!: string;
     producto!: Producto;
     persona!: Persona;
+    estadopago: string;
 
 
     constructor(){
@@ -25,5 +26,6 @@ export class DetalleMovimiento {
         this.razonsocial = "";
         this.producto = new Producto();
         this.persona = new Persona();
+        this.estadopago = "pendiente";
     }
 }
