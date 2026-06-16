@@ -1,1 +1,7 @@
 <router-outlet></router-outlet>
+
+@if (toastService.mensaje()) {
+  <div [class]="'toast-box ' + toastService.tipo()">
+    {{ toastService.mensaje() }}
+  </div>
+}

@@ -4,6 +4,7 @@ import { PersonaApi } from '../../services/persona-api';
 import { Persona } from '../../models/persona';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ToastService } from '../../services/toast';
 
 @Component({
   selector: 'app-persona-form',
@@ -17,7 +18,8 @@ export class PersonaForm {
     constructor(private router: Router,
               private personaApi: PersonaApi,
               private activatedRoute: ActivatedRoute,
-              private cd: ChangeDetectorRef) {
+              private cd: ChangeDetectorRef,
+              private toastService: ToastService) {
     this.persona = new Persona();
   }
 
@@ -38,10 +40,10 @@ export class PersonaForm {
       response => {
         console.log('Cliente agregado:', response);
         if (response.status === '1') {
-          alert('Cliente agregado exitosamente');
+          this.toastService.show('Cliente agregado exitosamente', 'success')
           this.router.navigate(['/persona-list']);
         } else {
-          alert('Error al agregar el cliente');
+          this.toastService.show('Error al agregar el cliente', 'error')
         }
       },
       error => {
@@ -57,10 +59,10 @@ export class PersonaForm {
       response => {
         console.log('Cliente modificado:', response);
         if (response.status === '1') {
-          alert('Cliente modificado exitosamente');
+          this.toastService.show('Cliente modificado exitosamente', 'success')
           this.router.navigate(['/persona-list']);
         } else {
-          alert('Error al modificar el cliente');
+          this.toastService.show('Error al modificar el cliente', 'error')
         }
       },
       error => {

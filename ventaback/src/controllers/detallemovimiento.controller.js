@@ -1,19 +1,32 @@
 const DetalleMovimiento = require('../models/detallemovimiento.model');
 const Producto = require('../models/producto.model');
 const Persona = require('../models/persona.model');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
+
 const detalleMovimientoCtrl = {};
 // Obtener todas las compras
 detalleMovimientoCtrl.getDetallesMovimiento = async (req, res) => {
-  try {
-    const detallesMovimiento = await DetalleMovimiento.findAll(
-      {
+
+  let criteria = {
         attributes: { exclude: ['personaId', 'productoId'] },
         include: [
           { model: Producto, as: 'producto' },
           { model: Persona, as: 'persona' }
-        ]
+        ],
+        order: [['id', 'DESC']]
+      };
+
+  // Agrego filtro por persona a criteria
+  if (req.query.personaId) {
+    criteria.where = {
+      personaId: {
+        [Op.eq]: req.query.personaId
       }
-    );
+    };
+  }
+  try {
+    const detallesMovimiento = await DetalleMovimiento.findAll(criteria);
     res.json(detallesMovimiento);
   } catch (error) {
     res.status(500).json({ status: '0', msg: 'Error al obtener las detalles.'+error });

@@ -8,6 +8,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PersonaApi } from '../../services/persona-api';
 import { Persona } from '../../models/persona';
 import { DetalleMovimientoApi } from '../../services/detalle-movimiento-api';
+import { ToastService } from '../../services/toast';
 
 @Component({
   selector: 'app-detalle-movimiento-form',
@@ -29,7 +30,8 @@ export class DetalleMovimientoForm {
               private personaApi: PersonaApi,
               private detalleMovimientoApi: DetalleMovimientoApi,
               private activatedRoute: ActivatedRoute,
-              private cd:ChangeDetectorRef) {
+              private cd:ChangeDetectorRef,
+              private toast: ToastService) {
     this.productos = new Array<Producto>();
     this.personas = new Array<Persona>();
     this.detalleMovimiento = new DetalleMovimiento();
@@ -92,15 +94,20 @@ export class DetalleMovimientoForm {
     this.detalleMovimientoApi.createDetalleMovimiento(this.detalleMovimiento).subscribe(
       (response:any)=>{
             if (response.status === '1') {
-              alert('Detalle agregado exitosamente');
+              this.toast.show('Detalle agregado exitosamente', 'success');
+              //alert('Detalle agregado exitosamente');
               this.router.navigate(['/detalle-movimiento-list']);
             } else {
+              this.toast.show('Error al agregar el Detalle', 'error')
               alert('Error al agregar el Detalle');
             }
       },
       error=>{
-        console.log(error);
-      }
+        if (error.status && error.status === '0'){
+          this.toast.show(error.msg, 'error');
+        }else {
+          this.toast.show('¡Movimiento no se guardo correctamente!', 'error');
+        }      }
     )
   }
 
@@ -109,9 +116,11 @@ export class DetalleMovimientoForm {
     this.detalleMovimientoApi.updateDetalleMovimiento(this.detalleMovimiento).subscribe(
       (response:any)=>{
         if (response.status === '1') {
-          alert('Detalle actualizado')
+          this.toast.show('¡Movimiento guardado con éxito!', 'success');
+          //alert('Detalle actualizado')
         } else {
-          alert('Error al actualizar el Detalle');
+          this.toast.show('Error al actualizar el Detalle', 'error');
+          //alert('Error al actualizar el Detalle');
         }
         this.router.navigate(['/detalle-movimiento-list']);
       },

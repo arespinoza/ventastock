@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Producto } from '../../models/producto';
 import { ProductoApi } from '../../services/producto-api';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ToastService } from '../../services/toast';
 
 @Component({
   selector: 'app-producto-form',
@@ -17,7 +18,8 @@ export class ProductoForm {
   constructor(private router: Router,
               private productoApi: ProductoApi,
               private activatedRoute: ActivatedRoute,
-              private cd: ChangeDetectorRef) {
+              private cd: ChangeDetectorRef,
+              private toastService: ToastService) {
     this.producto = new Producto();
   }
   ngOnInit(){
@@ -37,10 +39,10 @@ export class ProductoForm {
       response => {
         console.log('Producto agregado:', response);
         if (response.status === '1') {
-          alert('Producto agregado exitosamente');
+          this.toastService.show('Producto agregado exitosamente', 'success');
           this.router.navigate(['/producto-list']);
         } else {
-          alert('Error al agregar el producto');
+          this.toastService.show('Error al agregar el producto', 'error');
         }
       },
       error => {
@@ -56,10 +58,10 @@ export class ProductoForm {
       response => {
         console.log('Producto modificado:', response);
         if (response.status === '1') {
-          alert('Producto modificado exitosamente');
+          this.toastService.show('Producto modificado exitosamente', 'success');
           this.router.navigate(['/producto-list']);
         } else {
-          alert('Error al modificar el producto');
+          this.toastService.show('Error al modificar el producto', 'error');
         }
       },
       error => {
