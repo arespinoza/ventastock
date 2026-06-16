@@ -14,30 +14,29 @@
             <i class="bi bi-plus-circle"></i> Agregar Detalle de Movimiento
         </button>
     </div>
-
-    <!-- Tabla para listar los productos -->
+    <!-- Tabla para listar los movimientos -->
     <div class="table-responsive">
         <table class="table table-striped table-hover">
             <thead class="table-dark">
                 <tr >
+                    <th scope="col">ID Mov</th>
                     <th scope="col">Fecha</th>
                     <th scope="col">Cliente</th>
-                    <th scope="col">ID Mov</th>
                     <th scope="col">Producto</th>
-                    <th scope="col">Cantidad</th>
-                    <th scope="col">Precio Compra</th>
-                    <th scope="col">Precio Venta</th>
+                    <th scope="col">Cant</th>
+                    <th scope="col">$$Compra</th>
+                    <th scope="col">$$Venta</th>
                     <th scope="col">Convalidado?</th>
-                    <th scope="col">Razon Social</th>
+                    <th scope="col">R.Social</th>
                     <th scope="col">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <!-- Fila de ejemplo 1: Producto Activo -->
                 <tr *ngFor="let dm of detallesMovimientos">
+                    <th>{{dm.id}}</th>
                     <td>{{dm.fecha}}</td>
                     <td>{{dm.persona.apellido}}-{{dm.persona.nombres}}</td>
-                    <th>{{dm.id}}</th>
                     <td>{{dm.producto.nombre}}</td>
                     <td>{{dm.cantidad}}</td>
                     <td>{{dm.preciocompra | currency}}</td>

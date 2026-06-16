@@ -5,6 +5,8 @@ import { Persona } from '../../models/persona';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToastService } from '../../services/toast';
+import { DetalleMovimiento } from '../../models/detalle-movimiento';
+import { DetalleMovimientoApi } from '../../services/detalle-movimiento-api';
 
 @Component({
   selector: 'app-persona-form',
@@ -15,11 +17,17 @@ import { ToastService } from '../../services/toast';
 export class PersonaForm {
   accion: string = 'Agregar';
   persona: Persona;
+  totalVentas: number = 0;
+
+  detallesMovimientos: Array<DetalleMovimiento> = [];
+
+
     constructor(private router: Router,
               private personaApi: PersonaApi,
               private activatedRoute: ActivatedRoute,
               private cd: ChangeDetectorRef,
-              private toastService: ToastService) {
+              private toastService: ToastService,
+              private detalleMovimientoApi: DetalleMovimientoApi) {
     this.persona = new Persona();
   }
 
@@ -32,6 +40,7 @@ export class PersonaForm {
       else {
         this.accion = "modificar";
         this.cargarPersona(id);
+        this.getDetallesMovimientosPersona(id);
       }
     })
   }
@@ -84,6 +93,31 @@ export class PersonaForm {
         // Aquí puedes manejar el error, como mostrar un mensaje de error al usuario
       }
     );
+  }
+
+
+  getDetallesMovimientosPersona(id:number) {
+    this.detalleMovimientoApi.getDetallesMovimientoPersona(id).subscribe((data) => {
+      console.log(data);
+      this.detallesMovimientos = data as Array<DetalleMovimiento>;
+      this.cd.detectChanges();
+
+      //totalizar cuanto se vendio a la persona
+      let total = 0;
+      for (let i = 0; i < this.detallesMovimientos.length; i++) {
+        total += this.detallesMovimientos[i].precioventa;
+      }
+      this.totalVentas = total;
+      this.cd.detectChanges();
+    });
+  }
+  deleteDetalleMovimiento(id: number) {
+    if (confirm('¿Estás seguro de eliminar este detalle?')) {
+      this.detalleMovimientoApi.deleteDetalleMovimiento(id).subscribe(() => {
+        this.getDetallesMovimientosPersona(id);
+        this.cd.detectChanges();
+      });
+    }
   }
   salir() {
     this.router.navigate(['persona-list']);

@@ -45,7 +45,7 @@ export class DetalleMovimientoList {
     }
   }
 
-    redirigir(path: string){
+  redirigir(path: string){
     this.router.navigate([path]);
   }
 }

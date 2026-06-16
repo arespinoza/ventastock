@@ -7,47 +7,56 @@
         </ol>
     </nav>
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-10">
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white">
                     <h3>Formulario de Persona</h3>
                 </div>
                 <div class="card-body">
                     <form #personaForm="ngForm">
-                        <!-- Campo DNI -->
-                        <div class="mb-3">
-                            <label for="dni" class="form-label">DNI</label>
-                            <input type="text" class="form-control" id="dni" name="dni" placeholder="Ej: 12345678" [(ngModel)]="persona.dni" required>
-                        </div>
-
                         <!-- Campo Apellido -->
                         <div class="mb-3">
                             <label for="apellido" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Ej: Perez" [(ngModel)]="persona.apellido" required>
+                            <input type="text" class="form-control form-control-sm" id="apellido" name="apellido" placeholder="Ej: Perez" [(ngModel)]="persona.apellido" required>
                         </div>
 
                         <!-- Campo Nombres -->
                         <div class="mb-3">
                             <label for="nombres" class="form-label">Nombres</label>
-                            <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Ej: Juan Carlos" [(ngModel)]="persona.nombres" required>
+                            <input type="text" class="form-control form-control-sm" id="nombres" name="nombres" placeholder="Ej: Juan Carlos" [(ngModel)]="persona.nombres" required>
                         </div>
 
                         <!-- Campo Referencia -->
                         <div class="mb-3">
                             <label for="referencia" class="form-label">Referencia</label>
-                            <input type="text" class="form-control" id="referencia" name="referencia" placeholder="Ej: Cliente frecuente" [(ngModel)]="persona.referencia">
+                            <input type="text" class="form-control form-control-sm" id="referencia" name="referencia" placeholder="Ej: Cliente frecuente" [(ngModel)]="persona.referencia">
                         </div>
 
-                        <!-- Campo Correo Electrónico -->
+                        <!-- Toggle para campos opcionales -->
                         <div class="mb-3">
-                            <label for="correo_electronico" class="form-label">Correo Electrónico</label>
-                            <input type="email" class="form-control" id="correo_electronico" name="correo_electronico" placeholder="Ej: juan.perez@example.com" [(ngModel)]="persona.correo_electronico">
+                            <button class="btn btn-sm btn-link p-0 text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOpcionales" aria-expanded="false" aria-controls="collapseOpcionales">
+                                <i class="bi bi-chevron-down"></i> Mostrar más datos (opcionales)
+                            </button>
                         </div>
 
-                        <!-- Campo Número de Celular -->
-                        <div class="mb-3">
-                            <label for="nro_celular" class="form-label">Número de Celular</label>
-                            <input type="text" class="form-control" id="nro_celular" name="nro_celular" placeholder="Ej: 987654321" [(ngModel)]="persona.nro_celular">
+                        <div class="collapse" id="collapseOpcionales">
+                            <!-- Campo DNI -->
+                            <div class="mb-3">
+                                <label for="dni" class="form-label">DNI</label>
+                                <input type="text" class="form-control form-control-sm" id="dni" name="dni" placeholder="Ej: 12345678" [(ngModel)]="persona.dni">
+                            </div>
+
+                            <!-- Campo Correo Electrónico -->
+                            <div class="mb-3">
+                                <label for="correo_electronico" class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-control form-control-sm" id="correo_electronico" name="correo_electronico" placeholder="Ej: juan.perez@example.com" [(ngModel)]="persona.correo_electronico">
+                            </div>
+
+                            <!-- Campo Número de Celular -->
+                            <div class="mb-3">
+                                <label for="nro_celular" class="form-label">Número de Celular</label>
+                                <input type="text" class="form-control form-control-sm" id="nro_celular" name="nro_celular" placeholder="Ej: 987654321" [(ngModel)]="persona.nro_celular">
+                            </div>
                         </div>
 
                         <!-- Botones -->
@@ -62,6 +71,57 @@
                                 <i class="bi bi-box-arrow-right"></i> Salir
                             </button>
                         </div>
+                        <br>
+                       <!-- Campo Referencia -->
+                        <div class="mb-3">
+                            <!-- Tabla para listar los movimientos -->
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr >
+                                            <th scope="col" colspan="10">CLIENTE TOTAL VENTA: {{totalVentas | currency}}</th>
+                                        </tr>
+                                        <tr >
+                                            <th scope="col">IDMov</th>
+                                            <th scope="col">Fecha</th>
+                                            <th scope="col">Cliente</th>
+                                            <th scope="col">Producto</th>
+                                            <th scope="col">Cant</th>
+                                            <th scope="col">$$Compra</th>
+                                            <th scope="col">$$Venta</th>
+                                            <th scope="col">Convalidado?</th>
+                                            <th scope="col">R.Social</th>
+                                            <th scope="col">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Fila de ejemplo 1: Producto Activo -->
+                                        <tr *ngFor="let dm of detallesMovimientos">
+                                            <th>{{dm.id}}</th>
+                                            <td>{{dm.fecha}}</td>
+                                            <td>{{dm.persona.apellido}}-{{dm.persona.nombres}}</td>
+                                            <td>{{dm.producto.nombre}}</td>
+                                            <td>{{dm.cantidad}}</td>
+                                            <td>{{dm.preciocompra | currency}}</td>
+                                            <td>{{dm.precioventa | currency}}</td>
+                                            <td><span class="badge bg-success">{{dm.convalidado}}</span></td>
+                                            <td>{{dm.razonsocial}}</td>
+                            
+                                            <td>
+                                                <button class="btn btn-warning btn-sm" title="Editar"
+                                                    (click)="redirigir('detalle-movimiento-form/' + dm.id)" disabled>
+                                                    <i class="bi bi-pencil-square" type="button"></i>
+                                                </button>
+                                                <button class="btn btn-danger btn-sm" title="Eliminar"
+                                                    (click)="deleteDetalleMovimiento(dm.id)" disabled>
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>                            
+                        </div>                        
                     </form>
                 </div>
             </div>

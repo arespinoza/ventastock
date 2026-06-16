@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -13,6 +13,17 @@ export class DetalleMovimientoApi {
 
   getDetallesMovimiento(){
     return this.http.get(this.urlbase);
+  }
+
+  getDetallesMovimientoPersona(id: number){
+    let httpOption = {
+      headers: {
+      },
+      params: new HttpParams().set('personaId', id)
+    };
+
+
+    return this.http.get(this.urlbase, httpOption);
   }
   
   getDetalleMovimiento(id: number){
