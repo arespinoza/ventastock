@@ -37,10 +37,10 @@
                     <th>{{dm.id}}</th>
                     <td>
                         {{dm.producto.nombre}} 
-                        [<span [ngClass]="{
+                        <span [ngClass]="{
                             'text-danger fw-bold': dm.estadopago === 'pendiente',
                             'text-success fw-bold': dm.estadopago === 'pagado'
-                        }">{{dm.estadopago}}</span>]
+                        }">[{{dm.estadopago}}]</span>
                     </td>
                     <td>{{dm.cantidad}}</td>
                     <td>{{dm.persona.apellido}}-{{dm.persona.nombres}}</td>
