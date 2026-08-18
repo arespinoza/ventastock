@@ -44,7 +44,7 @@ export class DetalleMovimientoForm {
       if (id == 0) {
         this.accion = "agregar";
       // Convierte a formato ISO (YYYY-MM-DDTHH:mm:ss...) y extrae solo la fecha
-      this.detalleMovimiento.fecha = new Date().toISOString().split('T')[0];
+      this.detalleMovimiento.fecha = new Date().toISOString();
       this.cd.detectChanges()
       }
       else {
@@ -57,6 +57,7 @@ export class DetalleMovimientoForm {
   getDetalleMovimiento(id: number) {
     this.detalleMovimientoApi.getDetalleMovimiento(id).subscribe(
       data => {
+        console.log(data);
         this.detalleMovimiento = data as DetalleMovimiento;
         this.productoSeleccionadoTexto = this.detalleMovimiento.producto.nombre;
         this.personaSeleccionadaTexto = `${this.detalleMovimiento.persona.apellido} ${this.detalleMovimiento.persona.nombres}`;

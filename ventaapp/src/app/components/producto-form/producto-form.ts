@@ -5,6 +5,7 @@ import { Producto } from '../../models/producto';
 import { ProductoApi } from '../../services/producto-api';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ToastService } from '../../services/toast';
+import { SupabaseStorageService } from '../../services/supabase-storage';
 
 @Component({
   selector: 'app-producto-form',
@@ -15,13 +16,18 @@ import { ToastService } from '../../services/toast';
 export class ProductoForm {
   accion: string = 'Agregar';
   producto: Producto;
+  fotoSeleccionada?: File;
+  subiendoImagen = false;
+
   constructor(private router: Router,
               private productoApi: ProductoApi,
               private activatedRoute: ActivatedRoute,
               private cd: ChangeDetectorRef,
-              private toastService: ToastService) {
+              private toastService: ToastService,
+              private supabaseStorageService: SupabaseStorageService) {
     this.producto = new Producto();
   }
+
   ngOnInit(){
     this.activatedRoute.params.subscribe(params => {
       let id = params['id'];
@@ -34,6 +40,31 @@ export class ProductoForm {
       }
     })
   }
+
+  async onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    this.fotoSeleccionada = file;
+    this.subiendoImagen = true;
+
+    try {
+      const imageUrl = await this.supabaseStorageService.uploadProductImage(file);
+      this.producto.foto = imageUrl;
+      this.toastService.show('Foto subida correctamente', 'success');
+    } catch (error: any) {
+      console.error('Error al subir foto:', error);
+      this.toastService.show(error?.message || 'Error al subir la foto', 'error');
+    } finally {
+      this.subiendoImagen = false;
+      this.cd.detectChanges();
+    }
+  }
+
   agregarProducto() {
     this.productoApi.createProducto(this.producto).subscribe(
       response => {
@@ -47,7 +78,7 @@ export class ProductoForm {
       },
       error => {
         console.error('Error al agregar el producto:', error);
-        // Aquí puedes manejar el error, como mostrar un mensaje de error al usuario
+        this.toastService.show('Error al agregar el producto', 'error');
       }
     );
 
@@ -66,7 +97,7 @@ export class ProductoForm {
       },
       error => {
         console.error('Error al modificar el producto:', error);
-        // Aquí puedes manejar el error, como mostrar un mensaje de error al usuario
+        this.toastService.show('Error al modificar el producto', 'error');
       }
     );
   }
@@ -80,7 +111,7 @@ export class ProductoForm {
       },
       error => {
         console.error('Error al cargar el producto:', error);
-        // Aquí puedes manejar el error, como mostrar un mensaje de error al usuario
+        this.toastService.show('Error al cargar el producto', 'error');
       }
     );
   }

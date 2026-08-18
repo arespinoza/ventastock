@@ -6,6 +6,7 @@ export class Producto {
     preciocompra: number;
     precioventa: number;
     estado: boolean;
+    foto: string;
 
     constructor(){
         this.stock = 0;
@@ -14,5 +15,6 @@ export class Producto {
         this.preciocompra = 0;
         this.precioventa = 0;
         this.estado = true;
+        this.foto = '';
     }
 }

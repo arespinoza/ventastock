@@ -7,7 +7,8 @@ const Producto = sequelize.define('Producto', {
     categoria: {type: DataTypes.STRING, allowNull: false},
     preciocompra: {type: DataTypes.DECIMAL(10,2), allowNull: false},
     precioventa: {type: DataTypes.DECIMAL(10,2), allowNull: false},
-    estado: {type: DataTypes.BOOLEAN, allowNull: false}
+    estado: {type: DataTypes.BOOLEAN, allowNull: false},
+    foto: { type: DataTypes.STRING, allowNull: true, defaultValue: '' }
 }, {
 tableName: 'productos', // Nombre de la tabla en minúsculas y plural
 timestamps: true, // Crea automáticamente los campos createdAt y updatedAt

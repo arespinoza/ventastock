@@ -49,9 +49,15 @@
             <label for="fecha" class="col-4 col-form-label">Fecha</label>
             <div class="col-8">
               <input type="date" class="form-control form-control-sm"
-                id="fecha" name="fecha" [(ngModel)]="detalleMovimiento.fecha">
+                id="fecha" name="fecha" #fecha="ngModel"
+                [ngModel]="detalleMovimiento.fecha | date:'yyyy-MM-dd'" 
+                (ngModelChange)="detalleMovimiento.fecha = $event"
+                [value]="detalleMovimiento.fecha | date:'yyyy-MM-dd'"
+                >
             </div>            
           </div>
+
+
           <!-- Fila para Producto y Razón Social -->
            <div class="row mb-3">
             <div class="col-md-6">
