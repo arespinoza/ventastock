@@ -1,0 +1,71 @@
+<div class="catalogo-page py-4 py-md-5">
+    <div class="container">
+        <header class="catalogo-header mb-4 mb-md-5">
+            <p class="text-uppercase text-secondary fw-semibold small mb-2">Catálogo</p>
+            <h1 class="display-6 fw-bold mb-2">Nuestros productos</h1>
+            <p class="text-secondary mb-0">Elegí lo que necesitás y consultá su disponibilidad.</p>
+        </header>
+
+        <div class="input-group mb-4">
+            <input id="nombreFiltroCatalogo" type="search" class="form-control bg-light text-dark"
+                [(ngModel)]="nombreFiltro" placeholder="Buscar por nombre"
+                (keyup.enter)="buscarProductos()" aria-label="Buscar producto por nombre">
+            <button type="button" class="btn btn-secondary" title="Buscar"
+                aria-label="Buscar" (click)="buscarProductos()">
+                <i class="bi bi-search"></i>
+            </button>
+            <button type="button" class="btn btn-outline-secondary" title="Limpiar"
+                aria-label="Limpiar" (click)="limpiarFiltro()">
+                <i class="bi bi-x-circle"></i>
+            </button>
+        </div>
+
+        <div *ngIf="cargando" class="text-center py-5 text-secondary">
+            <div class="spinner-border text-success mb-3" role="status">
+                <span class="visually-hidden">Cargando productos...</span>
+            </div>
+            <p class="mb-0">Cargando productos...</p>
+        </div>
+
+        <div *ngIf="error" class="alert alert-danger" role="alert">
+            No se pudieron cargar los productos. Verificá la conexión con el servidor.
+        </div>
+
+        <div class="row g-4" *ngIf="!cargando && !error && productos.length; else sinProductos">
+            <div class="col-6 col-md-4 col-lg-3" *ngFor="let producto of productos">
+                <article class="card producto-card h-100 border-0 shadow-sm">
+                    <div class="producto-image-wrap">
+                        <img *ngIf="producto.foto; else sinFoto" [src]="producto.foto"
+                            [alt]="'Foto de ' + producto.nombre" class="card-img-top producto-image">
+                        <ng-template #sinFoto>
+                            <div class="producto-image producto-image-empty d-flex align-items-center justify-content-center">
+                                <i class="bi bi-image text-secondary" aria-hidden="true"></i>
+                                <span class="visually-hidden">Sin foto</span>
+                            </div>
+                        </ng-template>
+                        <span class="badge text-bg-light producto-category">{{producto.categoria}}</span>
+                    </div>
+                    <div class="card-body d-flex flex-column p-3 p-lg-4">
+                        <h2 class="h5 card-title mb-3">{{producto.nombre}}</h2>
+                        <div class="mt-auto">
+                            <div>
+                                <small class="text-secondary d-block">Precio de venta</small>
+                                <strong class="fs-4 text-success">{{producto.precioventa | currency}}</strong>
+                            </div>
+                            <div class="mt-2">
+                                <span class="fw-semibold" [class.text-danger]="producto.stock === 0">{{producto.stock}} disponible</span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <ng-template #sinProductos>
+            <div *ngIf="!cargando && !error" class="text-center py-5 text-secondary">
+                <i class="bi bi-box-seam display-4 d-block mb-3" aria-hidden="true"></i>
+                <p class="mb-0">No hay productos disponibles.</p>
+            </div>
+        </ng-template>
+    </div>
+</div>

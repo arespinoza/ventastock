@@ -6,11 +6,13 @@ import { DetalleMovimientoForm } from './components/detalle-movimiento-form/deta
 import { DetalleMovimientoList } from './components/detalle-movimiento-list/detalle-movimiento-list';
 import { PersonaList } from './components/persona-list/persona-list';
 import { PersonaForm } from './components/persona-form/persona-form';
+import { ProductoClienteList } from './components/producto-cliente-list/producto-cliente-list';
 
 export const routes: Routes = [
     // Ruta para mostrar la lista de productos
     { path: 'home', component: HomePage },
     { path: 'producto-list', component: ProductoList },
+    { path: 'productos', component: ProductoClienteList },
     { path: 'producto-form/:id', component: ProductoForm },
     { path: 'persona-list', component:PersonaList},
     { path: 'persona-form/:id', component: PersonaForm },

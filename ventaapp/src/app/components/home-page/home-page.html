@@ -11,6 +11,9 @@
           <li class="nav-item">
             <a class="nav-link" (click)="navigateTo('producto-list')">Productos</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" (click)="navigateTo('productos')">Catálogo</a>
+          </li>
         </ul>
       </div>
     </div>
@@ -41,6 +44,17 @@
             <i class="bi bi-box-seam display-3 text-primary"></i>
             <h3 class="card-title mt-3">Productos</h3>
             <p class="card-text">Gestionar inventario, precios y categorías.</p>
+          </a>
+        </div>
+      </div>
+
+      <!-- Tarjeta de Catálogo -->
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-hover" (click)="navigateTo('productos')">
+          <a class="card-body text-decoration-none">
+            <i class="bi bi-grid-3x3-gap-fill display-3 text-success"></i>
+            <h3 class="card-title mt-3">Catálogo</h3>
+            <p class="card-text">Consultar productos, precios y stock disponible.</p>
           </a>
         </div>
       </div>
