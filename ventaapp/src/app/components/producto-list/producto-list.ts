@@ -72,6 +72,45 @@ export class ProductoList {
     }
   }
 
+  async compartirPorWhatsApp(producto: any) {
+    const informacionProducto = [
+      `Producto: ${producto.nombre}`,
+      `ID: ${producto.id}`,
+      `Categoría: ${producto.categoria}`,
+      `Estado: ${producto.estado ? 'Vigente' : 'No vigente'}`,
+      `Stock: ${producto.stock}`,
+      `Precio de venta: $${producto.precioventa}`
+    ].join('\n');
+
+    if (producto.foto && navigator.share && navigator.canShare) {
+      try {
+        const respuesta = await fetch(producto.foto);
+        const imagen = await respuesta.blob();
+        const extension = imagen.type.split('/')[1] || 'jpg';
+        const archivo = new File([imagen], `producto-${producto.id}.${extension}`, {
+          type: imagen.type
+        });
+
+        if (navigator.canShare({ files: [archivo] })) {
+          await navigator.share({
+            files: [archivo],
+            text: informacionProducto,
+            title: producto.nombre
+          });
+          return;
+        }
+      } catch {
+        // Usa WhatsApp Web como alternativa si se cancela o no se puede adjuntar.
+      }
+    }
+
+    const mensajeWhatsApp = producto.foto
+      ? `${informacionProducto}\nFoto: ${producto.foto}`
+      : `${informacionProducto}\nFoto: Sin foto`;
+    const urlWhatsApp = `https://wa.me/?text=${encodeURIComponent(mensajeWhatsApp)}`;
+    window.open(urlWhatsApp, '_blank', 'noopener,noreferrer');
+  }
+
   redirigir(path: string){
     this.router.navigate([path]);
   }
