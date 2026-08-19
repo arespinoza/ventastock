@@ -22,12 +22,22 @@
   <div class="container mt-5">
     <div class="text-center mb-4">
       <h1>Panel de Control</h1>
-      <p class="lead">Seleccione una opción para comenzar a gestionar.</p>
     </div>
   
     <div class="row text-center">
+      <!-- Tarjeta de Productos -->
+      <div class="col-6 mb-4">
+        <div class="card h-100 shadow-hover" (click)="navigateTo('producto-list')">
+          <a class="card-body text-decoration-none">
+            <i class="bi bi-box-seam display-3 text-primary"></i>
+            <h3 class="card-title mt-3">Productos</h3>
+            <p class="card-text">Gestionar inventario, precios y categorías.</p>
+          </a>
+        </div>
+      </div>
+
       <!-- Tarjeta de Clientes -->
-      <div class="col-md-4 mb-4">
+      <div class="col-6 mb-4">
         <div class="card h-100 shadow-hover" (click)="navigateTo('persona-list')">
           <a class="card-body text-decoration-none">
             <i class="bi bi-people-fill display-3 text-info"></i>
@@ -37,35 +47,24 @@
         </div>
       </div>
 
-      <!-- Tarjeta de Productos -->
-      <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-hover" (click)="navigateTo('producto-list')">
-          <a  class="card-body text-decoration-none">
-            <i class="bi bi-box-seam display-3 text-primary"></i>
-            <h3 class="card-title mt-3">Productos</h3>
-            <p class="card-text">Gestionar inventario, precios y categorías.</p>
+      <!-- Tarjeta de Movimientos/Compras -->
+      <div class="col-6 mb-4">
+        <div class="card h-100 shadow-hover" (click)="navigateTo('detalle-movimiento-list')">
+          <a class="card-body text-decoration-none">
+            <i class="bi bi-receipt-cutoff display-3 text-success"></i>
+            <h3 class="card-title mt-3">Movimientos</h3>
+            <p class="card-text">Registrar compras y gestionar transacciones.</p>
           </a>
         </div>
       </div>
 
       <!-- Tarjeta de Catálogo -->
-      <div class="col-md-4 mb-4">
+      <div class="col-6 mb-4">
         <div class="card h-100 shadow-hover" (click)="navigateTo('catalogo')">
           <a class="card-body text-decoration-none">
             <i class="bi bi-grid-3x3-gap-fill display-3 text-success"></i>
             <h3 class="card-title mt-3">Catálogo</h3>
             <p class="card-text">Consultar productos, precios y stock disponible.</p>
-          </a>
-        </div>
-      </div>
-  
-      <!-- Tarjeta de Movimientos/Compras -->
-      <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-hover" (click)="navigateTo('detalle-movimiento-list')">
-          <a  class="card-body text-decoration-none">
-            <i class="bi bi-receipt-cutoff display-3 text-success"></i>
-            <h3 class="card-title mt-3">Movimientos</h3>
-            <p class="card-text">Registrar compras y gestionar transacciones.</p>
           </a>
         </div>
       </div>
