@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { ProductoApi } from '../../services/producto-api';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -13,6 +13,7 @@ import { Router, RouterLink } from '@angular/router';
 export class ProductoList {
   productos: Array<any> = [];
   nombreFiltro = '';
+  fotoAmpliada: string | null = null;
   private solicitudProductos = 0;
 
   constructor(private productoApi: ProductoApi,
@@ -41,6 +42,19 @@ export class ProductoList {
   limpiarFiltro() {
     this.nombreFiltro = '';
     this.getProductos();
+  }
+
+  ampliarFoto(foto: string) {
+    this.fotoAmpliada = foto;
+  }
+
+  cerrarFoto() {
+    this.fotoAmpliada = null;
+  }
+
+  @HostListener('document:keydown.escape')
+  cerrarFotoConEscape() {
+    this.cerrarFoto();
   }
 
 
