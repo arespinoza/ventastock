@@ -12,7 +12,7 @@ export const routes: Routes = [
     // Ruta para mostrar la lista de productos
     { path: 'home', component: HomePage },
     { path: 'producto-list', component: ProductoList },
-    { path: 'productos', component: ProductoClienteList },
+    { path: 'catalogo', component: ProductoClienteList },
     { path: 'producto-form/:id', component: ProductoForm },
     { path: 'persona-list', component:PersonaList},
     { path: 'persona-form/:id', component: PersonaForm },

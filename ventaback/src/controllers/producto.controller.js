@@ -5,7 +5,9 @@ const Op = Sequelize.Op;
 
 // Obtener todos los productos
 productoCtrl.getProductos = async (req, res) => {
-  const criteria = {};
+  const criteria = {
+    order: [['id', 'DESC']]
+  };
   if (req.query.categoria) {
     criteria.where = {
       categoria: {
