@@ -21,6 +21,15 @@ productoCtrl.getProductos = async (req, res) => {
     };
   }
 
+  if (req.query.nombre) {
+    criteria.where = {
+      ...criteria.where,
+      nombre: {
+        [Op.like]: `%${req.query.nombre}%`
+      }
+    };
+  }
+
   try {
     const productos = await Producto.findAll(criteria);
     res.json(productos);
