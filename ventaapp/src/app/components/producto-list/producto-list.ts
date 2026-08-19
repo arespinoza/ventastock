@@ -12,6 +12,8 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class ProductoList {
   productos: Array<any> = [];
+  nombreFiltro = '';
+  private solicitudProductos = 0;
 
   constructor(private productoApi: ProductoApi,
               private router: Router,
@@ -19,11 +21,26 @@ export class ProductoList {
                 this.getProductos();
               }
 
-  getProductos() {
-    this.productoApi.getProductos().subscribe((data) => {
+  getProductos(nombre = this.nombreFiltro) {
+    const solicitudActual = ++this.solicitudProductos;
+
+    this.productoApi.getProductos(nombre).subscribe((data) => {
+      if (solicitudActual !== this.solicitudProductos) {
+        return;
+      }
+
       this.productos = data;
       this.cd.detectChanges();
     });
+  }
+
+  filtrarProductos() {
+    this.getProductos();
+  }
+
+  limpiarFiltro() {
+    this.nombreFiltro = '';
+    this.getProductos();
   }
 
 

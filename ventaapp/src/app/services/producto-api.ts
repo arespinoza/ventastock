@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 
@@ -11,8 +11,15 @@ export class ProductoApi {
   private urlbase = this.hostbase + 'api/producto';
   constructor(private http: HttpClient) { } 
 
-  getProductos():Observable<any> {
-    return this.http.get(this.urlbase);
+  getProductos(nombre?: string):Observable<any> {
+    let params = new HttpParams();
+    const nombreFiltrado = nombre?.trim();
+
+    if (nombreFiltrado) {
+      params = params.set('nombre', nombreFiltrado);
+    }
+
+    return this.http.get(this.urlbase, { params });
   }
 
   getProducto(id: number):Observable<any> {

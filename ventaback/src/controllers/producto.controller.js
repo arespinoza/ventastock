@@ -25,7 +25,7 @@ productoCtrl.getProductos = async (req, res) => {
     criteria.where = {
       ...criteria.where,
       nombre: {
-        [Op.like]: `%${req.query.nombre}%`
+        [Op.iLike]: `%${req.query.nombre}%`
       }
     };
   }
