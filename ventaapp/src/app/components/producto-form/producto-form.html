@@ -33,7 +33,16 @@
                                     <img *ngIf="producto.foto" [src]="producto.foto" alt="Foto del producto" style="max-width: 100%; max-height: 150px; object-fit: cover; border-radius: 8px;">
                                     <span *ngIf="!producto.foto" class="text-muted">Sin imagen</span>
                                 </div>
-                                <input type="file" accept="image/*" class="form-control" (change)="onFileSelected($event)">
+                                <div class="d-flex gap-2 mt-2 flex-wrap">
+                                    <label class="btn btn-outline-primary btn-sm mb-0">
+                                        Elegir archivo
+                                        <input type="file" accept="image/*" hidden (change)="onFileSelected($event)">
+                                    </label>
+                                    <label class="btn btn-outline-secondary btn-sm mb-0">
+                                        Tomar foto
+                                        <input type="file" accept="image/*" capture="environment" hidden (change)="onFileSelected($event)">
+                                    </label>
+                                </div>
                                 <small *ngIf="subiendoImagen" class="text-primary d-block mt-2">Subiendo foto...</small>
                             </div>
                         </div>
