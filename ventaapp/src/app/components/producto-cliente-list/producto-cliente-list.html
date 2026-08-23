@@ -50,7 +50,7 @@
                             </div>
                         </ng-template>
                         <span class="badge text-bg-light producto-category me-1"
-                            *ngFor="let categoria of (producto.categorias?.length ? producto.categorias : [{nombre: producto.categoria}])">
+                            *ngFor="let categoria of producto.categorias">
                             {{categoria.nombre}}
                         </span>
                     </div>

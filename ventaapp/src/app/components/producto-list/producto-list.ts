@@ -88,7 +88,6 @@ export class ProductoList {
     const informacionProducto = [
       `Producto: ${producto.nombre}`,
       `ID: ${producto.id}`,
-      `Categoría: ${producto.categoria}`,
       `Estado: ${producto.estado ? 'Vigente' : 'No vigente'}`,
       `Stock: ${producto.stock}`,
       `Precio de venta: $${producto.precioventa}`

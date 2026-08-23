@@ -2,7 +2,6 @@ export class Producto {
     id!: number;
     stock!: number;
     nombre: string;
-    categoria: string;
     categoriaIds: number[];
     categorias: Array<{ id: number; nombre: string }>;
     preciocompra!: number;
@@ -13,7 +12,6 @@ export class Producto {
     constructor(){
         //this.stock = 0;
         this.nombre = "";
-        this.categoria = "";
         this.categoriaIds = [];
         this.categorias = [];
         //this.preciocompra = 0;

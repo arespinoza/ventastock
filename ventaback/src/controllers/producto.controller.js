@@ -11,13 +11,6 @@ productoCtrl.getProductos = async (req, res) => {
     order: [['id', 'DESC']],
     include: [{ model: Categoria, as: 'categorias', through: { attributes: [] } }]
   };
-  if (req.query.categoria) {
-    criteria.where = {
-      categoria: {
-        [Op.like]: `%${req.query.categoria}%`
-      }
-    };
-  }
   if (req.query.estado) {
     criteria.where = {
       estado: {
@@ -50,8 +43,7 @@ productoCtrl.createProducto = async (req, res) => {
     const categoriaIds = normalizarCategoriaIds(req.body.categoriaIds);
     await sequelize.transaction(async (transaction) => {
       const producto = await Producto.create({
-        ...req.body,
-        categoria: req.body.categoria || ''
+        ...req.body
       }, { transaction });
       await producto.setCategorias(categoriaIds, { transaction });
     });
@@ -81,8 +73,7 @@ productoCtrl.editProducto = async (req, res) => {
     const categoriaIds = normalizarCategoriaIds(req.body.categoriaIds);
     await sequelize.transaction(async (transaction) => {
       await Producto.update({
-        ...req.body,
-        categoria: req.body.categoria || ''
+        ...req.body
       }, {
         where: { id: req.params.id },
         transaction

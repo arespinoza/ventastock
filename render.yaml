@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: ventastock-frontend
+    runtime: static
+    rootDir: ventaapp
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist/ventaapp/browser
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

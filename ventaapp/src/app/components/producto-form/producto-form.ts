@@ -127,13 +127,9 @@ export class ProductoForm {
   }
 
   productoConCategorias(): Producto {
-    const categoriasSeleccionadas = this.categorias
-      .filter(categoria => this.categoriaIds.includes(categoria.id));
-
     return {
       ...this.producto,
-      categoriaIds: this.categoriaIds,
-      categoria: categoriasSeleccionadas.map(categoria => categoria.nombre).join(', ')
+      categoriaIds: this.categoriaIds
     };
   }
 
