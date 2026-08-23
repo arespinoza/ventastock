@@ -6,18 +6,29 @@
             <p class="text-secondary mb-0">Elegí lo que necesitás y consultá su disponibilidad.</p>
         </header>
 
-        <div class="input-group mb-4">
-            <input id="nombreFiltroCatalogo" type="search" class="form-control bg-info bg-opacity-10 text-dark"
+        <div class="row g-2 mb-4">
+            <div class="col-md-5">
+                <label for="nombreFiltroCatalogo" class="visually-hidden">Buscar por nombre</label>
+                <input id="nombreFiltroCatalogo" type="search" class="form-control bg-info bg-opacity-10 text-dark"
                 [(ngModel)]="nombreFiltro" placeholder="Buscar por nombre"
                 (keyup.enter)="buscarProductos()" aria-label="Buscar producto por nombre">
-            <button type="button" class="btn btn-secondary" title="Buscar"
-                aria-label="Buscar" (click)="buscarProductos()">
-                <i class="bi bi-search"></i>
-            </button>
-            <button type="button" class="btn btn-outline-secondary" title="Limpiar"
-                aria-label="Limpiar" (click)="limpiarFiltro()">
-                <i class="bi bi-x-circle"></i>
-            </button>
+            </div>
+            <div class="col-md-5">
+                <label for="categoriaFiltroCatalogo" class="visually-hidden">Buscar por categoría</label>
+                <input id="categoriaFiltroCatalogo" type="search" class="form-control bg-info bg-opacity-10 text-dark"
+                    [(ngModel)]="categoriaFiltro" placeholder="Buscar por categoría"
+                    (keyup.enter)="buscarProductos()" aria-label="Buscar producto por categoría">
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button type="button" class="btn btn-secondary flex-grow-1" title="Buscar"
+                    aria-label="Buscar" (click)="buscarProductos()">
+                    <i class="bi bi-search"></i>
+                </button>
+                <button type="button" class="btn btn-outline-secondary" title="Limpiar"
+                    aria-label="Limpiar" (click)="limpiarFiltro()">
+                    <i class="bi bi-x-circle"></i>
+                </button>
+            </div>
         </div>
 
         <div *ngIf="cargando" class="text-center py-5 text-secondary">

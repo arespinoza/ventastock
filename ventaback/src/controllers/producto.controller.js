@@ -7,9 +7,18 @@ const Op = Sequelize.Op;
 
 // Obtener todos los productos
 productoCtrl.getProductos = async (req, res) => {
+  const categoriaFiltrada = req.query.categoria?.trim();
   const criteria = {
     order: [['id', 'DESC']],
-    include: [{ model: Categoria, as: 'categorias', through: { attributes: [] } }]
+    include: [{
+      model: Categoria,
+      as: 'categorias',
+      through: { attributes: [] },
+      ...(categoriaFiltrada && {
+        where: { nombre: { [Op.iLike]: `%${categoriaFiltrada}%` } },
+        required: true
+      })
+    }]
   };
   if (req.query.estado) {
     criteria.where = {

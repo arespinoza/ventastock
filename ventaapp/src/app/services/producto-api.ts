@@ -11,12 +11,16 @@ export class ProductoApi {
   private urlbase = this.hostbase + 'api/producto';
   constructor(private http: HttpClient) { } 
 
-  getProductos(nombre?: string):Observable<any> {
+  getProductos(nombre?: string, categoria?: string):Observable<any> {
     let params = new HttpParams();
     const nombreFiltrado = nombre?.trim();
+    const categoriaFiltrada = categoria?.trim();
 
     if (nombreFiltrado) {
       params = params.set('nombre', nombreFiltrado);
+    }
+    if (categoriaFiltrada) {
+      params = params.set('categoria', categoriaFiltrada);
     }
 
     return this.http.get(this.urlbase, { params });

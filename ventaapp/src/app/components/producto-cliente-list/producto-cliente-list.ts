@@ -12,6 +12,7 @@ import { ProductoApi } from '../../services/producto-api';
 export class ProductoClienteList {
   productos: Array<any> = [];
   nombreFiltro = '';
+  categoriaFiltro = '';
   cargando = true;
   error = false;
   fotoAmpliada: string | null = null;
@@ -27,7 +28,7 @@ export class ProductoClienteList {
     this.cargando = true;
     this.error = false;
 
-    this.productoApi.getProductos(this.nombreFiltro).subscribe({
+    this.productoApi.getProductos(this.nombreFiltro, this.categoriaFiltro).subscribe({
       next: (data) => {
         if (solicitud !== this.solicitudActual) {
           return;
@@ -51,6 +52,7 @@ export class ProductoClienteList {
 
   limpiarFiltro() {
     this.nombreFiltro = '';
+    this.categoriaFiltro = '';
     this.buscarProductos();
   }
 
