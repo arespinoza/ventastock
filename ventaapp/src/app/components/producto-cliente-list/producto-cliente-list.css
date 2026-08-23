@@ -42,9 +42,22 @@
     font-size: 3rem;
 }
 
-.producto-category {
+.producto-categories {
     position: absolute;
     left: 1rem;
     bottom: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    max-width: calc(100% - 2rem);
+}
+
+.producto-category {
     border: 1px solid rgba(33, 37, 41, 0.12);
+    cursor: pointer;
+}
+
+.producto-category.active {
+    background-color: #198754 !important;
+    color: #fff !important;
 }

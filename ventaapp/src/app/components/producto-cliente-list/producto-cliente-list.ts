@@ -56,6 +56,11 @@ export class ProductoClienteList {
     this.buscarProductos();
   }
 
+  seleccionarCategoria(categoria: string) {
+    this.categoriaFiltro = categoria;
+    this.buscarProductos();
+  }
+
   obtenerMiniatura(foto: string): string {
     const marcadorObjetoPublico = '/storage/v1/object/public/';
 
