@@ -48,7 +48,8 @@
                         <button *ngIf="producto.foto" type="button" class="btn p-0 border-0"
                             title="Ampliar foto" aria-label="Ampliar foto del producto"
                             (click)="ampliarFoto(producto.foto)">
-                            <img [src]="producto.foto" alt="Foto del producto"
+                            <img [src]="obtenerMiniatura(producto.foto)" alt="Foto del producto"
+                                loading="lazy" decoding="async" width="55" height="55"
                                 style="width: 55px; height: 55px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;">
                         </button>
                         <span *ngIf="!producto.foto" class="text-muted">Sin foto</span>

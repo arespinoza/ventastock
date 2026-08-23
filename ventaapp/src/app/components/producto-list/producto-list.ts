@@ -44,6 +44,18 @@ export class ProductoList {
     this.getProductos();
   }
 
+  obtenerMiniatura(foto: string): string {
+    const marcadorObjetoPublico = '/storage/v1/object/public/';
+
+    if (!foto.includes(marcadorObjetoPublico)) {
+      return foto;
+    }
+
+    return foto
+      .replace(marcadorObjetoPublico, '/storage/v1/render/image/public/')
+      + '?width=96&height=96&resize=cover&quality=65';
+  }
+
   ampliarFoto(foto: string) {
     this.fotoAmpliada = foto;
   }
