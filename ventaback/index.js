@@ -6,6 +6,7 @@ var app = express();
 app.use(express.json());
 app.use(cors({
     origin: [
+        'https://ventastock.onrender.com',
         'http://localhost:4200',
         'https://affidavit-mumbo-next.ngrok-free.dev',
         'http://10.3.2.189',
