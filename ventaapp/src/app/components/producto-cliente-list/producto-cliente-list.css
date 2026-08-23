@@ -42,6 +42,13 @@
     font-size: 3rem;
 }
 
+.catalog-filter-categories {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
 .producto-categories {
     position: absolute;
     left: 1rem;
@@ -54,10 +61,4 @@
 
 .producto-category {
     border: 1px solid rgba(33, 37, 41, 0.12);
-    cursor: pointer;
-}
-
-.producto-category.active {
-    background-color: #198754 !important;
-    color: #fff !important;
 }

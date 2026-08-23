@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductoApi } from '../../services/producto-api';
+import { CategoriaApi } from '../../services/categoria-api';
 
 @Component({
   selector: 'app-producto-cliente-list',
@@ -11,6 +12,7 @@ import { ProductoApi } from '../../services/producto-api';
 })
 export class ProductoClienteList {
   productos: Array<any> = [];
+  categorias: Array<any> = [];
   nombreFiltro = '';
   categoriaFiltro = '';
   cargando = true;
@@ -19,8 +21,19 @@ export class ProductoClienteList {
   private solicitudActual = 0;
 
   constructor(private productoApi: ProductoApi,
+              private categoriaApi: CategoriaApi,
               private cd: ChangeDetectorRef) {
+    this.cargarCategorias();
     this.buscarProductos();
+  }
+
+  cargarCategorias() {
+    this.categoriaApi.getCategorias().subscribe({
+      next: (categorias) => {
+        this.categorias = categorias;
+        this.cd.detectChanges();
+      }
+    });
   }
 
   buscarProductos() {

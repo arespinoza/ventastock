@@ -13,7 +13,25 @@
                 [(ngModel)]="nombreFiltro" placeholder="Buscar por nombre"
                 (keyup.enter)="buscarProductos()" aria-label="Buscar producto por nombre">
             </div>
-            <div class="col-md-7 d-flex justify-content-md-end gap-2">
+            <div class="col-md-7 catalog-filter-categories" *ngIf="categorias.length">
+                <span class="text-secondary small">Categorías:</span>
+                <button type="button" class="btn btn-sm"
+                    [class.btn-success]="!categoriaFiltro"
+                    [class.btn-outline-success]="categoriaFiltro"
+                    [class.active]="!categoriaFiltro"
+                    (click)="seleccionarCategoria('')">
+                    Todas
+                </button>
+                <button type="button" class="btn btn-sm"
+                    *ngFor="let categoria of categorias"
+                    [class.btn-success]="categoriaFiltro === categoria.nombre"
+                    [class.btn-outline-success]="categoriaFiltro !== categoria.nombre"
+                    [class.active]="categoriaFiltro === categoria.nombre"
+                    (click)="seleccionarCategoria(categoria.nombre)">
+                    {{categoria.nombre}}
+                </button>
+            </div>
+            <div class="col-12 d-flex justify-content-end gap-2">
                 <button type="button" class="btn btn-secondary flex-grow-1" title="Buscar"
                     aria-label="Buscar" (click)="buscarProductos()">
                     <i class="bi bi-search"></i>
@@ -55,13 +73,11 @@
                             </div>
                         </ng-template>
                         <div class="producto-categories">
-                            <button type="button" class="badge text-bg-light producto-category"
+                            <span class="badge text-bg-light producto-category"
                                 *ngFor="let categoria of producto.categorias"
-                                [class.active]="categoriaFiltro === categoria.nombre"
-                                [title]="'Filtrar por ' + categoria.nombre"
-                                (click)="seleccionarCategoria(categoria.nombre)">
+                                [title]="categoria.nombre">
                                 {{categoria.nombre}}
-                            </button>
+                            </span>
                         </div>
                     </div>
                     <div class="card-body d-flex flex-column p-3 p-lg-4">
