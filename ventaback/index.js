@@ -3,6 +3,7 @@ const cors = require('cors');
 const sequelize = require('./config/database');
 const bcrypt = require('bcryptjs');
 const Usuario = require('./src/models/usuario.model');
+require('./src/models/associations');
 var app = express();
 //middlewares
 app.use(express.json());
@@ -20,6 +21,7 @@ app.use('/api/producto', require('./src/routes/producto.route.js'));
 app.use('/api/persona', require('./src/routes/persona.route.js'));
 app.use('/api/detallemovimiento', require('./src/routes/detallemovimiento.route.js'));
 app.use('/api/usuario', require('./src/routes/usuario.route.js'));
+app.use('/api/categoria', require('./src/routes/categoria.route.js'));
 //setting
 app.set('port', process.env.PORT || 3000);
 // Sincronizar Base de Datos y arrancar el servidor.

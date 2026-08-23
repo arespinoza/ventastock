@@ -22,8 +22,40 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="categoria" class="form-label">Categoría</label>
-                                    <input type="text" class="form-control" id="categoria" name="categoria" placeholder="Ej: Periféricos" [(ngModel)]="producto.categoria" required>
+                                    <span class="form-label d-block">Categorías</span>
+                                    <div class="border rounded p-2" *ngIf="categorias.length; else sinCategorias">
+                                        <div class="form-check" *ngFor="let categoria of categorias">
+                                            <input class="form-check-input" type="checkbox"
+                                                [id]="'categoria-' + categoria.id"
+                                                [checked]="categoriaIds.includes(categoria.id)"
+                                                (change)="alternarCategoria(categoria.id, $event)">
+                                            <label class="form-check-label" [for]="'categoria-' + categoria.id">
+                                                {{categoria.nombre}}
+                                                <small class="text-secondary d-block">{{categoria.descripcion}}</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <ng-template #sinCategorias>
+                                        <p class="text-secondary mb-0">No hay categorías disponibles.</p>
+                                    </ng-template>
+                                    <div class="row g-2 mt-2">
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control form-control-sm"
+                                                name="nuevaCategoriaNombre" placeholder="Nueva categoría"
+                                                [(ngModel)]="nuevaCategoria.nombre">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control form-control-sm"
+                                                name="nuevaCategoriaDescripcion" placeholder="Descripción"
+                                                [(ngModel)]="nuevaCategoria.descripcion">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-outline-primary btn-sm w-100"
+                                                (click)="crearCategoria()" [disabled]="!nuevaCategoria.nombre.trim()">
+                                                <i class="bi bi-plus-circle"></i> Crear
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 

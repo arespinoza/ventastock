@@ -53,7 +53,10 @@
                                 style="width: 55px; height: 55px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;">
                         </button>
                         <span *ngIf="!producto.foto" class="text-muted">Sin foto</span>
-                        <br><span class="badge bg-warning text-dark">{{producto.categoria}}</span> 
+                        <br><span class="badge bg-warning text-dark me-1"
+                            *ngFor="let categoria of (producto.categorias?.length ? producto.categorias : [{nombre: producto.categoria}])">
+                            {{categoria.nombre}}
+                        </span>
                         <br><span class="badge" [class.bg-primary]="producto.estado" [class.bg-dark]="!producto.estado">
                             {{producto.estado ? 'Vigente' : 'No vigente'}}
                         </span>

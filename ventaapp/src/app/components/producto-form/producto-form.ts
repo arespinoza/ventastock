@@ -6,6 +6,7 @@ import { ProductoApi } from '../../services/producto-api';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ToastService } from '../../services/toast';
 import { SupabaseStorageService } from '../../services/supabase-storage';
+import { CategoriaApi } from '../../services/categoria-api';
 
 @Component({
   selector: 'app-producto-form',
@@ -18,17 +19,25 @@ export class ProductoForm {
   producto: Producto;
   fotoSeleccionada?: File;
   subiendoImagen = false;
+  categorias: any[] = [];
+  categoriaIds: number[] = [];
+  nuevaCategoria = { nombre: '', descripcion: '' };
 
   constructor(private router: Router,
               private productoApi: ProductoApi,
               private activatedRoute: ActivatedRoute,
               private cd: ChangeDetectorRef,
               private toastService: ToastService,
-              private supabaseStorageService: SupabaseStorageService) {
+              private supabaseStorageService: SupabaseStorageService,
+              private categoriaApi: CategoriaApi) {
     this.producto = new Producto();
   }
 
   ngOnInit(){
+    this.categoriaApi.getCategorias().subscribe({
+      next: categorias => this.categorias = categorias,
+      error: () => this.toastService.show('No se pudieron cargar las categorías', 'error')
+    });
     this.activatedRoute.params.subscribe(params => {
       let id = params['id'];
       if (id == 0) {
@@ -66,7 +75,7 @@ export class ProductoForm {
   }
 
   agregarProducto() {
-    this.productoApi.createProducto(this.producto).subscribe(
+    this.productoApi.createProducto(this.productoConCategorias()).subscribe(
       response => {
         console.log('Producto agregado:', response);
         if (response.status === '1') {
@@ -85,7 +94,7 @@ export class ProductoForm {
   }
 
   modificarProducto() {
-    this.productoApi.updateProducto(this.producto).subscribe(
+    this.productoApi.updateProducto(this.productoConCategorias()).subscribe(
       response => {
         console.log('Producto modificado:', response);
         if (response.status === '1') {
@@ -107,6 +116,7 @@ export class ProductoForm {
       response => {
         console.log('Producto cargado:', response);
         this.producto = response;
+        this.categoriaIds = response.categorias?.map((categoria: any) => categoria.id) || [];
         this.cd.detectChanges();
       },
       error => {
@@ -114,6 +124,43 @@ export class ProductoForm {
         this.toastService.show('Error al cargar el producto', 'error');
       }
     );
+  }
+
+  productoConCategorias(): Producto {
+    const categoriasSeleccionadas = this.categorias
+      .filter(categoria => this.categoriaIds.includes(categoria.id));
+
+    return {
+      ...this.producto,
+      categoriaIds: this.categoriaIds,
+      categoria: categoriasSeleccionadas.map(categoria => categoria.nombre).join(', ')
+    };
+  }
+
+  alternarCategoria(id: number, event: Event): void {
+    const seleccionado = (event.target as HTMLInputElement).checked;
+    this.categoriaIds = seleccionado
+      ? [...new Set([...this.categoriaIds, id])]
+      : this.categoriaIds.filter(categoriaId => categoriaId !== id);
+  }
+
+  crearCategoria(): void {
+    const nombre = this.nuevaCategoria.nombre.trim();
+    if (!nombre) {
+      return;
+    }
+
+    this.categoriaApi.createCategoria({ nombre, descripcion: this.nuevaCategoria.descripcion.trim() })
+      .subscribe({
+        next: categoria => {
+          this.categorias = [...this.categorias, categoria]
+            .sort((a, b) => a.nombre.localeCompare(b.nombre));
+          this.categoriaIds = [...this.categoriaIds, categoria.id];
+          this.nuevaCategoria = { nombre: '', descripcion: '' };
+          this.toastService.show('Categoría creada correctamente', 'success');
+        },
+        error: () => this.toastService.show('No se pudo crear la categoría', 'error')
+      });
   }
   salir() {
     this.router.navigate(['/producto-list']);

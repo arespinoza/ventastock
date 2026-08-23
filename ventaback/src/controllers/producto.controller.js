@@ -1,4 +1,6 @@
 const Producto = require('../models/producto.model'); // Asegúrate de usar la ruta correcta a tu modelo
+const Categoria = require('../models/categoria.model');
+const sequelize = require('../../config/database');
 const productoCtrl = {};
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -6,7 +8,8 @@ const Op = Sequelize.Op;
 // Obtener todos los productos
 productoCtrl.getProductos = async (req, res) => {
   const criteria = {
-    order: [['id', 'DESC']]
+    order: [['id', 'DESC']],
+    include: [{ model: Categoria, as: 'categorias', through: { attributes: [] } }]
   };
   if (req.query.categoria) {
     criteria.where = {
@@ -44,8 +47,14 @@ productoCtrl.getProductos = async (req, res) => {
 // Crear un nuevo producto
 productoCtrl.createProducto = async (req, res) => {
   try {
-    // Sequelize usa .create() para instanciar y guardar en un solo paso
-    await Producto.create(req.body);
+    const categoriaIds = normalizarCategoriaIds(req.body.categoriaIds);
+    await sequelize.transaction(async (transaction) => {
+      const producto = await Producto.create({
+        ...req.body,
+        categoria: req.body.categoria || ''
+      }, { transaction });
+      await producto.setCategorias(categoriaIds, { transaction });
+    });
     res.json({ status: '1', msg: 'Producto guardado.' });
   } catch (error) {
     res.status(400).json({ status: '0', msg: 'Error procesando operacion.' });
@@ -55,7 +64,9 @@ productoCtrl.createProducto = async (req, res) => {
 productoCtrl.getProducto = async (req, res) => {
   try {
     // Buscamos por la clave primaria (id numérico)
-    const producto = await Producto.findByPk(req.params.id);
+    const producto = await Producto.findByPk(req.params.id, {
+      include: [{ model: Categoria, as: 'categorias', through: { attributes: [] } }]
+    });
     if (!producto) {
       return res.status(404).json({ status: '0', msg: 'Producto no encontrado.' });
     }
@@ -67,8 +78,20 @@ productoCtrl.getProducto = async (req, res) => {
 // Editar un producto
 productoCtrl.editProducto = async (req, res) => {
   try {
-    await Producto.update(req.body, {
-      where: { id: req.body.id }
+    const categoriaIds = normalizarCategoriaIds(req.body.categoriaIds);
+    await sequelize.transaction(async (transaction) => {
+      await Producto.update({
+        ...req.body,
+        categoria: req.body.categoria || ''
+      }, {
+        where: { id: req.params.id },
+        transaction
+      });
+      const producto = await Producto.findByPk(req.params.id, { transaction });
+      if (!producto) {
+        throw new Error('Producto no encontrado');
+      }
+      await producto.setCategorias(categoriaIds, { transaction });
     });
     res.json({ status: '1', msg: 'Producto updated' });
   } catch (error) {
@@ -87,4 +110,11 @@ productoCtrl.deleteProducto = async (req, res) => {
     res.status(400).json({ status: '0', msg: 'Error procesando la operacion' });
   }
 };
+
+function normalizarCategoriaIds(categoriaIds) {
+  if (!Array.isArray(categoriaIds)) {
+    return [];
+  }
+  return [...new Set(categoriaIds.map(Number).filter(Number.isInteger))];
+}
 module.exports = productoCtrl;
