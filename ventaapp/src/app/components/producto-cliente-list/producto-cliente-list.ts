@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductoApi } from '../../services/producto-api';
@@ -14,6 +14,7 @@ export class ProductoClienteList {
   nombreFiltro = '';
   cargando = true;
   error = false;
+  fotoAmpliada: string | null = null;
   private solicitudActual = 0;
 
   constructor(private productoApi: ProductoApi,
@@ -51,5 +52,30 @@ export class ProductoClienteList {
   limpiarFiltro() {
     this.nombreFiltro = '';
     this.buscarProductos();
+  }
+
+  obtenerMiniatura(foto: string): string {
+    const marcadorObjetoPublico = '/storage/v1/object/public/';
+
+    if (!foto.includes(marcadorObjetoPublico)) {
+      return foto;
+    }
+
+    return foto
+      .replace(marcadorObjetoPublico, '/storage/v1/render/image/public/')
+      + '?width=640&height=440&resize=cover&quality=70';
+  }
+
+  ampliarFoto(foto: string) {
+    this.fotoAmpliada = foto;
+  }
+
+  cerrarFoto() {
+    this.fotoAmpliada = null;
+  }
+
+  @HostListener('document:keydown.escape')
+  cerrarFotoConEscape() {
+    this.cerrarFoto();
   }
 }

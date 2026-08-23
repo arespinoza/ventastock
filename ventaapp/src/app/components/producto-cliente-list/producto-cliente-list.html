@@ -35,8 +35,14 @@
             <div class="col-6 col-md-4 col-lg-3" *ngFor="let producto of productos">
                 <article class="card producto-card h-100 border-0 shadow-sm">
                     <div class="producto-image-wrap">
-                        <img *ngIf="producto.foto; else sinFoto" [src]="producto.foto"
-                            [alt]="'Foto de ' + producto.nombre" class="card-img-top producto-image">
+                        <button *ngIf="producto.foto; else sinFoto" type="button"
+                            class="producto-image-button" [title]="'Ampliar foto de ' + producto.nombre"
+                            [attr.aria-label]="'Ampliar foto de ' + producto.nombre"
+                            (click)="ampliarFoto(producto.foto)">
+                            <img [src]="obtenerMiniatura(producto.foto)"
+                                [alt]="'Foto de ' + producto.nombre" class="card-img-top producto-image"
+                                loading="lazy" decoding="async" width="640" height="440">
+                        </button>
                         <ng-template #sinFoto>
                             <div class="producto-image producto-image-empty d-flex align-items-center justify-content-center">
                                 <i class="bi bi-image text-secondary" aria-hidden="true"></i>
@@ -66,3 +72,19 @@
         </ng-template>
     </div>
 </div>
+
+<div *ngIf="fotoAmpliada" class="modal fade show d-block" tabindex="-1" role="dialog"
+    aria-modal="true" aria-label="Foto ampliada" (click)="cerrarFoto()">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content bg-transparent border-0" (click)="$event.stopPropagation()">
+            <div class="modal-header border-0 p-0 justify-content-end">
+                <button type="button" class="btn-close btn-close-white bg-dark p-2" title="Cerrar"
+                    aria-label="Cerrar foto ampliada" (click)="cerrarFoto()"></button>
+            </div>
+            <div class="modal-body p-0 text-center">
+                <img [src]="fotoAmpliada" alt="Foto ampliada del producto" class="img-fluid rounded">
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="fotoAmpliada" class="modal-backdrop fade show" (click)="cerrarFoto()"></div>
