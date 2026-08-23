@@ -1,3 +1,22 @@
+@if (mostrarHeader) {
+  <header class="app-header navbar navbar-dark bg-dark shadow-sm">
+    <div class="container-fluid">
+      <a class="navbar-brand" routerLink="/home">
+        <i class="bi bi-shop" aria-hidden="true"></i> VentaApp
+      </a>
+      <nav class="d-flex gap-3 me-auto ms-3" aria-label="Navegación principal">
+        <a class="nav-link text-white" routerLink="/producto-list">Productos</a>
+        <a class="nav-link text-white" routerLink="/catalogo">Catálogo</a>
+      </nav>
+      <button type="button" class="btn btn-outline-light btn-sm" title="Cerrar sesión"
+          aria-label="Cerrar sesión" (click)="cerrarSesion()">
+        <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+        <span class="d-none d-sm-inline ms-1">Cerrar sesión</span>
+      </button>
+    </div>
+  </header>
+}
+
 <router-outlet></router-outlet>
 
 @if (toastService.mensaje()) {
