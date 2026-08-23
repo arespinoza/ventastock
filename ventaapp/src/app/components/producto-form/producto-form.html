@@ -12,7 +12,7 @@
                 <div class="card-header bg-primary text-white">
                     <h3>Formulario de Producto</h3>
                 </div>
-                <div class="card-body">
+                <div class="card-body bg-secondary bg-opacity-25" >
                     <form #productoForm="ngForm">
                         <div class="row">
                             <div class="col-md-8">
@@ -31,31 +31,13 @@
                                                 (change)="alternarCategoria(categoria.id, $event)">
                                             <label class="form-check-label" [for]="'categoria-' + categoria.id">
                                                 {{categoria.nombre}}
-                                                <small class="text-secondary d-block">{{categoria.descripcion}}</small>
                                             </label>
                                         </div>
                                     </div>
                                     <ng-template #sinCategorias>
                                         <p class="text-secondary mb-0">No hay categorías disponibles.</p>
                                     </ng-template>
-                                    <div class="row g-2 mt-2">
-                                        <div class="col-md-5">
-                                            <input type="text" class="form-control form-control-sm"
-                                                name="nuevaCategoriaNombre" placeholder="Nueva categoría"
-                                                [(ngModel)]="nuevaCategoria.nombre">
-                                        </div>
-                                        <div class="col-md-5">
-                                            <input type="text" class="form-control form-control-sm"
-                                                name="nuevaCategoriaDescripcion" placeholder="Descripción"
-                                                [(ngModel)]="nuevaCategoria.descripcion">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <button type="button" class="btn btn-outline-primary btn-sm w-100"
-                                                (click)="crearCategoria()" [disabled]="!nuevaCategoria.nombre.trim()">
-                                                <i class="bi bi-plus-circle"></i> Crear
-                                            </button>
-                                        </div>
-                                    </div>
+
                                 </div>
                             </div>
 
