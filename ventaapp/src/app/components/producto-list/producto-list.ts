@@ -45,6 +45,7 @@ export class ProductoList {
   }
 
   obtenerMiniatura(foto: string): string {
+    /**
     const marcadorObjetoPublico = '/storage/v1/object/public/';
 
     if (!foto.includes(marcadorObjetoPublico)) {
@@ -54,6 +55,8 @@ export class ProductoList {
     return foto
       .replace(marcadorObjetoPublico, '/storage/v1/render/image/public/')
       + '?width=96&height=96&resize=cover&quality=65';
+    **/
+   return foto;
   }
 
   ampliarFoto(foto: string) {
