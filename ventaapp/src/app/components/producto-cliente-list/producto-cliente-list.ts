@@ -75,15 +75,17 @@ export class ProductoClienteList {
   }
 
   obtenerMiniatura(foto: string): string {
-    const marcadorObjetoPublico = '/storage/v1/object/public/';
+    //const marcadorObjetoPublico = '/storage/v1/object/public/';
 
-    if (!foto.includes(marcadorObjetoPublico)) {
-      return foto;
-    }
+    //if (!foto.includes(marcadorObjetoPublico)) {
+    //  return foto;
+    //}
 
-    return foto
-      .replace(marcadorObjetoPublico, '/storage/v1/render/image/public/')
-      + '?width=640&height=440&resize=cover&quality=70';
+    //return foto
+    //  .replace(marcadorObjetoPublico, '/storage/v1/render/image/public/')
+    //  + '?width=640&height=440&resize=cover&quality=70';
+
+    return foto;
   }
 
   ampliarFoto(foto: string) {
