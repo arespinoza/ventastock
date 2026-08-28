@@ -3,26 +3,29 @@ import { Producto } from "./producto";
 
 export class DetalleMovimiento {
     id!: number;
-    cantidad!: number;
-    preciocompra!: number;
-    precioventa!: number;
-    subtotal!: number;
+    cantidad: number;
+    preciocompra: number;
+    precioventa: number;
+    subtotal: number;
     tipo!: string;
     fecha!: string;
     razonsocial!: string;
     producto!: Producto;
     persona!: Persona;
     estadopago: string;
+    convalidado: boolean;
 
 
     constructor(){
-        //this.cantidad = 0;
-        //this.preciocompra = 0;
+        this.cantidad = 0;
+        this.preciocompra = 0;
+        this.precioventa = 0;
         this.subtotal = 0;
         this.tipo = "venta";
         this.fecha = "";
         this.producto = new Producto();
         this.persona = new Persona();
         this.estadopago = "pendiente";
+        this.convalidado = false;
     }
 }

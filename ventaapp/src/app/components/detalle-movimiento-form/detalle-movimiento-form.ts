@@ -118,6 +118,11 @@ export class DetalleMovimientoForm {
   }
 
   guardarDetalleMovimiento() {
+    if (!this.detalleValido()) {
+      this.toast.show('Completa producto, persona y una cantidad mayor que cero', 'error');
+      return;
+    }
+
     this.detalleMovimientoApi.createDetalleMovimiento(this.detalleMovimiento).subscribe(
       (response:any)=>{
             if (response.status === '1') {
@@ -159,11 +164,25 @@ export class DetalleMovimientoForm {
 
 
   calcularSubtotal() {
-    if (this.detalleMovimiento.tipo == 'venta') {
-      this.detalleMovimiento.subtotal = this.detalleMovimiento.cantidad * this.detalleMovimiento.precioventa;
-    } else if (this.detalleMovimiento.tipo == 'compra') {
-      this.detalleMovimiento.subtotal = this.detalleMovimiento.cantidad * this.detalleMovimiento.preciocompra;
-    }
+    const cantidad = Number(this.detalleMovimiento.cantidad);
+    const precio = this.detalleMovimiento.tipo == 'venta'
+      ? Number(this.detalleMovimiento.precioventa)
+      : Number(this.detalleMovimiento.preciocompra);
+
+    this.detalleMovimiento.subtotal = Number.isFinite(cantidad) && Number.isFinite(precio)
+      ? cantidad * precio
+      : 0;
+  }
+
+  private detalleValido(): boolean {
+    const cantidad = Number(this.detalleMovimiento.cantidad);
+    const subtotal = Number(this.detalleMovimiento.subtotal);
+
+    return Boolean(this.detalleMovimiento.producto?.id)
+      && Boolean(this.detalleMovimiento.persona?.id)
+      && cantidad > 0
+      && Number.isFinite(subtotal)
+      && Boolean(this.detalleMovimiento.fecha);
   }
 
   onProductoSeleccionado() {
