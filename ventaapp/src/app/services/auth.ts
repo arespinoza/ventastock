@@ -26,7 +26,18 @@ export class AuthService {
   }
 
   estaAutenticado(): boolean {
-    return !!this.token;
+    const token = this.token;
+    if (!token) {
+      return false;
+    }
+
+    try {
+      const payload = token.split('.')[1];
+      const datos = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+      return typeof datos.exp === 'number' && datos.exp * 1000 > Date.now();
+    } catch {
+      return false;
+    }
   }
 
   cerrarSesion(): void {
