@@ -56,6 +56,10 @@
                                         Tomar foto
                                         <input type="file" accept="image/*" capture="environment" hidden (change)="onFileSelected($event)">
                                     </label>
+                                    <button type="button" class="btn btn-outline-success btn-sm"
+                                        (click)="abrirEditor()" [disabled]="!fotoSeleccionada">
+                                        <i class="bi bi-crop"></i> Recortar
+                                    </button>
                                 </div>
                                 <small *ngIf="subiendoImagen" class="text-primary d-block mt-2">Subiendo foto...</small>
                             </div>
@@ -106,3 +110,34 @@
         </div>
     </div>
 </div>
+
+<div *ngIf="editorAbierto" class="modal fade show d-block" tabindex="-1" role="dialog"
+    aria-modal="true" aria-label="Editar foto">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar foto</h5>
+                <button type="button" class="btn-close" title="Cerrar" aria-label="Cerrar editor"
+                    (click)="cerrarEditor()"></button>
+            </div>
+            <div class="modal-body">
+                <image-cropper
+                    [imageChangedEvent]="imagenParaEditar"
+                    [maintainAspectRatio]="false"
+                    format="jpeg"
+                    output="blob"
+                    (imageCropped)="imagenRecortada($event)">
+                </image-cropper>
+                <label for="brillo" class="form-label mt-3">Brillo: {{brillo}}%</label>
+                <input id="brillo" type="range" class="form-range" min="50" max="150"
+                    step="1" [(ngModel)]="brillo">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="cerrarEditor()">Cancelar</button>
+                <button type="button" class="btn btn-success" [disabled]="!fotoRecortada"
+                    (click)="aplicarEdicion()">Aplicar cambios</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="editorAbierto" class="modal-backdrop fade show"></div>

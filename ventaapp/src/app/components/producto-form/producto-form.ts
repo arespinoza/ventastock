@@ -8,10 +8,11 @@ import { ToastService } from '../../services/toast';
 import { SupabaseStorageService } from '../../services/supabase-storage';
 import { CategoriaApi } from '../../services/categoria-api';
 import { firstValueFrom } from 'rxjs';
+import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
 
 @Component({
   selector: 'app-producto-form',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, ImageCropperComponent],
   templateUrl: './producto-form.html',
   styleUrl: './producto-form.css',
 })
@@ -19,7 +20,12 @@ export class ProductoForm {
   accion: string = 'Agregar';
   producto: Producto;
   fotoSeleccionada?: File;
+  private fotoOriginal = '';
   subiendoImagen = false;
+  imagenParaEditar: Event | null = null;
+  fotoRecortada: Blob | null = null;
+  editorAbierto = false;
+  brillo = 100;
   categorias: any[] = [];
   categoriaIds: number[] = [];
   nuevaCategoria = { nombre: '', descripcion: '' };
@@ -51,7 +57,7 @@ export class ProductoForm {
     })
   }
 
-  async onFileSelected(event: Event) {
+  onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
 
@@ -60,26 +66,86 @@ export class ProductoForm {
     }
 
     this.fotoSeleccionada = file;
+    this.imagenParaEditar = event;
+    this.fotoRecortada = null;
+    if (this.producto.foto.startsWith('blob:')) {
+      URL.revokeObjectURL(this.producto.foto);
+    }
+    this.producto.foto = URL.createObjectURL(file);
+    this.cd.detectChanges();
+  }
 
-    if (this.accion === 'agregar') {
-      this.producto.foto = URL.createObjectURL(file);
-      this.cd.detectChanges();
+  abrirEditor(): void {
+    if (!this.fotoSeleccionada || !this.imagenParaEditar) {
+      this.toastService.show('Primero selecciona o toma una foto', 'error');
+      return;
+    }
+    this.brillo = 100;
+    this.fotoRecortada = null;
+    this.editorAbierto = true;
+  }
+
+  imagenRecortada(event: ImageCroppedEvent): void {
+    this.fotoRecortada = event.blob ?? null;
+  }
+
+  async aplicarEdicion(): Promise<void> {
+    if (!this.fotoRecortada || !this.fotoSeleccionada) {
       return;
     }
 
-    this.subiendoImagen = true;
+    const fotoEditada = await this.aplicarBrillo(this.fotoRecortada);
+    const nombre = this.fotoSeleccionada.name.replace(/\.[^.]+$/, '') || 'producto';
+    const tipo = fotoEditada.type || 'image/jpeg';
+    this.fotoSeleccionada = new File([fotoEditada], `${nombre}.jpg`, { type });
+    this.reemplazarPrevisualizacion(URL.createObjectURL(this.fotoSeleccionada));
+    this.editorAbierto = false;
+    this.fotoRecortada = null;
+  }
 
-    try {
-      const imageUrl = await this.supabaseStorageService.uploadProductImage(file);
-      this.producto.foto = imageUrl;
-      this.toastService.show('Foto subida correctamente', 'success');
-    } catch (error: any) {
-      console.error('Error al subir foto:', error);
-      this.toastService.show(error?.message || 'Error al subir la foto', 'error');
-    } finally {
-      this.subiendoImagen = false;
-      this.cd.detectChanges();
+  cerrarEditor(): void {
+    this.editorAbierto = false;
+    this.fotoRecortada = null;
+  }
+
+  private reemplazarPrevisualizacion(url: string): void {
+    if (this.producto.foto.startsWith('blob:')) {
+      URL.revokeObjectURL(this.producto.foto);
     }
+    this.producto.foto = url;
+  }
+
+  private aplicarBrillo(foto: Blob): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(foto);
+      const imagen = new Image();
+      imagen.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = imagen.naturalWidth;
+        canvas.height = imagen.naturalHeight;
+        const contexto = canvas.getContext('2d');
+        if (!contexto) {
+          URL.revokeObjectURL(url);
+          reject(new Error('No se pudo preparar la imagen'));
+          return;
+        }
+        contexto.filter = `brightness(${this.brillo}%)`;
+        contexto.drawImage(imagen, 0, 0);
+        URL.revokeObjectURL(url);
+        canvas.toBlob(resultado => {
+          if (resultado) {
+            resolve(resultado);
+          } else {
+            reject(new Error('No se pudo generar la imagen editada'));
+          }
+        }, 'image/jpeg', 0.9);
+      };
+      imagen.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error('No se pudo leer la imagen'));
+      };
+      imagen.src = url;
+    });
   }
 
   async agregarProducto() {
@@ -123,22 +189,50 @@ export class ProductoForm {
     }
   }
 
-  modificarProducto() {
-    this.productoApi.updateProducto(this.productoConCategorias()).subscribe(
-      response => {
-        console.log('Producto modificado:', response);
-        if (response.status === '1') {
-          this.toastService.show('Producto modificado exitosamente', 'success');
-          this.router.navigate(['/producto-list']);
-        } else {
-          this.toastService.show('Error al modificar el producto', 'error');
+  async modificarProducto() {
+    let fotoNueva = '';
+    const fotoPrevisualizada = this.producto.foto;
+
+    try {
+      this.subiendoImagen = true;
+      if (this.fotoSeleccionada) {
+        fotoNueva = await this.supabaseStorageService.uploadProductImage(this.fotoSeleccionada);
+        this.producto.foto = fotoNueva;
+      }
+
+      const response = await firstValueFrom(this.productoApi.updateProducto(this.productoConCategorias()));
+      if (response.status === '1') {
+        if (fotoNueva && this.fotoOriginal && this.fotoOriginal !== fotoNueva) {
+          await this.supabaseStorageService.deleteProductImage(this.fotoOriginal);
         }
-      },
-      error => {
-        console.error('Error al modificar el producto:', error);
+        this.liberarFotoPrevisualizada(fotoPrevisualizada);
+        this.toastService.show('Producto modificado exitosamente', 'success');
+        this.router.navigate(['/producto-list']);
+      } else {
+        await this.eliminarFotoSiFueSubida(fotoNueva);
+        this.producto.foto = this.fotoOriginal;
         this.toastService.show('Error al modificar el producto', 'error');
       }
-    );
+    } catch (error) {
+      await this.eliminarFotoSiFueSubida(fotoNueva);
+      this.producto.foto = this.fotoOriginal;
+      this.liberarFotoPrevisualizada(fotoPrevisualizada);
+      console.error('Error al modificar el producto:', error);
+      this.toastService.show('Error al modificar el producto', 'error');
+    } finally {
+      this.subiendoImagen = false;
+      this.cd.detectChanges();
+    }
+  }
+
+  private liberarFotoPrevisualizada(foto: string): void {
+    if (foto.startsWith('blob:')) {
+      URL.revokeObjectURL(foto);
+    }
+  }
+
+  private cargarFotoOriginal(foto: string): void {
+    this.fotoOriginal = foto;
   }
 
   cargarProducto(id: number) {
@@ -146,6 +240,7 @@ export class ProductoForm {
       response => {
         console.log('Producto cargado:', response);
         this.producto = response;
+        this.cargarFotoOriginal(response.foto || '');
         this.categoriaIds = response.categorias?.map((categoria: any) => categoria.id) || [];
         this.cd.detectChanges();
       },
