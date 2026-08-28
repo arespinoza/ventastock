@@ -20,6 +20,7 @@ app.use(cors({
 app.use('/api/producto', require('./src/routes/producto.route.js'));
 app.use('/api/persona', require('./src/routes/persona.route.js'));
 app.use('/api/detallemovimiento', require('./src/routes/detallemovimiento.route.js'));
+app.use('/api/abono', require('./src/routes/abono.route.js'));
 app.use('/api/usuario', require('./src/routes/usuario.route.js'));
 app.use('/api/categoria', require('./src/routes/categoria.route.js'));
 //setting
