@@ -1,0 +1,36 @@
+@media (max-width: 575.98px) {
+	.container {
+		margin-top: 1.5rem !important;
+	}
+
+	.row {
+		--bs-gutter-x: 0.25rem;
+		--bs-gutter-y: 0.25rem;
+	}
+
+	.row > [class*="col-"] {
+		margin-bottom: 0.25rem !important;
+	}
+
+	h1 {
+		font-size: 1.5rem;
+	}
+
+	.card-body {
+		padding: 0.5rem 0.2rem;
+	}
+
+	.card-body .display-3 {
+		font-size: 2.1rem;
+	}
+
+	.card-title {
+		font-size: 1.05rem;
+		margin-top: 0.5rem !important;
+	}
+
+	.card-text {
+		font-size: 0.78rem;
+		line-height: 1.2;
+	}
+}

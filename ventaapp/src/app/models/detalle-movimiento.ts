@@ -10,6 +10,7 @@ export class DetalleMovimiento {
     tipo!: string;
     fecha!: string;
     convalidado!: boolean;
+    razonsocial!: string;
     producto!: Producto;
     persona!: Persona;
     estadopago: string;
