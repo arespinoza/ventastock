@@ -97,7 +97,7 @@ export class ProductoForm {
     const fotoEditada = await this.aplicarBrillo(this.fotoRecortada);
     const nombre = this.fotoSeleccionada.name.replace(/\.[^.]+$/, '') || 'producto';
     const tipo = fotoEditada.type || 'image/jpeg';
-    this.fotoSeleccionada = new File([fotoEditada], `${nombre}.jpg`, { type });
+    this.fotoSeleccionada = new File([fotoEditada], `${nombre}.jpg`, { type: tipo });
     this.reemplazarPrevisualizacion(URL.createObjectURL(this.fotoSeleccionada));
     this.editorAbierto = false;
     this.fotoRecortada = null;
