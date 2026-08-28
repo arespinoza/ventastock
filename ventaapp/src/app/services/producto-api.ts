@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/internal/Observable';
+import { Observable, defer, from, switchMap } from 'rxjs';
+import { SupabaseStorageService } from './supabase-storage';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +10,8 @@ export class ProductoApi {
 
   private hostbase = 'https://aplicaciones.fce.unju.edu.ar/ventasapi/';
   private urlbase = this.hostbase + 'api/producto';
-  constructor(private http: HttpClient) { } 
+  constructor(private http: HttpClient,
+              private supabaseStorageService: SupabaseStorageService) { }
 
   getProductos(nombre?: string, categoria?: string):Observable<any> {
     let params = new HttpParams();
@@ -50,8 +52,13 @@ export class ProductoApi {
     return this.http.put(`${this.urlbase}/${producto.id}`, body, httpOptions);
   }
 
-  deleteProducto(id: number):Observable<any> {
-    return this.http.delete(`${this.urlbase}/${id}`);
+  deleteProducto(id: number): Observable<any> {
+    return this.http.get<{ foto?: string }>(`${this.urlbase}/${id}`).pipe(
+      switchMap(producto => defer(() => from(
+        this.supabaseStorageService.deleteProductImage(producto.foto ?? '')
+      ))),
+      switchMap(() => this.http.delete(`${this.urlbase}/${id}`))
+    );
   }
 
 }

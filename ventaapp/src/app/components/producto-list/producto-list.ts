@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { ProductoApi } from '../../services/producto-api';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-producto-list',
@@ -78,9 +78,9 @@ export class ProductoList {
     this.router.navigate([path]);
   }
 
-  deleteProducto(id: number) {
+  deleteProducto(producto: any) {
     if (confirm('¿Estás seguro de eliminar este producto?')) {
-      this.productoApi.deleteProducto(id).subscribe(() => {
+      this.productoApi.deleteProducto(producto.id).subscribe(() => {
         this.getProductos();
         this.cd.detectChanges();
       });

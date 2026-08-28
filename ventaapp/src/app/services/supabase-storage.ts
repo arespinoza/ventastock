@@ -39,4 +39,26 @@ export class SupabaseStorageService {
 
     return data.publicUrl;
   }
+
+  async deleteProductImage(publicUrl: string): Promise<void> {
+    if (!publicUrl) {
+      return;
+    }
+
+    const marker = '/storage/v1/object/public/productos/';
+    const markerIndex = publicUrl.indexOf(marker);
+    if (markerIndex === -1) {
+      return;
+    }
+
+    const filePath = decodeURIComponent(publicUrl.slice(markerIndex + marker.length));
+    if (!filePath) {
+      return;
+    }
+
+    const { error } = await this.supabase.storage.from('productos').remove([filePath]);
+    if (error) {
+      throw error;
+    }
+  }
 }

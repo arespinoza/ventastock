@@ -7,6 +7,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ToastService } from '../../services/toast';
 import { SupabaseStorageService } from '../../services/supabase-storage';
 import { CategoriaApi } from '../../services/categoria-api';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-producto-form',
@@ -59,6 +60,13 @@ export class ProductoForm {
     }
 
     this.fotoSeleccionada = file;
+
+    if (this.accion === 'agregar') {
+      this.producto.foto = URL.createObjectURL(file);
+      this.cd.detectChanges();
+      return;
+    }
+
     this.subiendoImagen = true;
 
     try {
@@ -74,23 +82,45 @@ export class ProductoForm {
     }
   }
 
-  agregarProducto() {
-    this.productoApi.createProducto(this.productoConCategorias()).subscribe(
-      response => {
+  async agregarProducto() {
+    let fotoSubida = '';
+    const fotoPrevisualizada = this.producto.foto;
+
+    try {
+      this.subiendoImagen = true;
+      if (this.fotoSeleccionada) {
+        fotoSubida = await this.supabaseStorageService.uploadProductImage(this.fotoSeleccionada);
+        this.producto.foto = fotoSubida;
+      }
+
+      const response = await firstValueFrom(this.productoApi.createProducto(this.productoConCategorias()));
+      this.subiendoImagen = false;
+      if (fotoPrevisualizada.startsWith('blob:')) {
+        URL.revokeObjectURL(fotoPrevisualizada);
+      }
+
         console.log('Producto agregado:', response);
         if (response.status === '1') {
           this.toastService.show('Producto agregado exitosamente', 'success');
           this.router.navigate(['/producto-list']);
         } else {
+          await this.eliminarFotoSiFueSubida(fotoSubida);
           this.toastService.show('Error al agregar el producto', 'error');
         }
-      },
-      error => {
-        console.error('Error al agregar el producto:', error);
-        this.toastService.show('Error al agregar el producto', 'error');
-      }
-    );
+    } catch (error) {
+      this.subiendoImagen = false;
+      await this.eliminarFotoSiFueSubida(fotoSubida);
+      console.error('Error al agregar el producto:', error);
+      this.toastService.show('Error al agregar el producto', 'error');
+    } finally {
+      this.cd.detectChanges();
+    }
+  }
 
+  private async eliminarFotoSiFueSubida(foto: string): Promise<void> {
+    if (foto) {
+      await this.supabaseStorageService.deleteProductImage(foto);
+    }
   }
 
   modificarProducto() {
