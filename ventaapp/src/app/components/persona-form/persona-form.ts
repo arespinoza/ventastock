@@ -127,6 +127,7 @@ export class PersonaForm {
       },
       error => {
         console.error('Error al cargar los abonos de la persona:', error);
+        this.toastService.show('No se pudieron cargar los abonos', 'error');
       }
     );
   }

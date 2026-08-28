@@ -1,5 +1,6 @@
 const Abono = require('../models/abono.model');
 const DetalleMovimiento = require('../models/detallemovimiento.model');
+const Producto = require('../models/producto.model');
 const AbonoDetalleMovimiento = require('../models/abono-detalle-movimiento.model');
 const Persona = require('../models/persona.model');
 const sequelize = require('../../config/database');

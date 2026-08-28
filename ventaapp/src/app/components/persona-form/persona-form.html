@@ -79,7 +79,7 @@
                             </button>
                             <!-- Tabla para listar los movimientos -->
                             <div class="table-responsive">
-                                <table class="table table-sm table-striped table-hover">
+                                <table class="table table-sm table-striped table-hover align-middle">
                                     <thead class="table-dark">
                                         <tr >
                                             <th scope="col">ID</th>
@@ -141,7 +141,7 @@
                                             <th scope="col">Monto</th>
                                             <th scope="col">Fecha</th>
                                             <th scope="col">Método de pago</th>
-                                            <th scope="col">Detalles aplicados</th>
+                                            <th scope="col">Detalle de movimiento</th>
                                             <th scope="col">Comentario</th>
                                             <th scope="col">Acciones</th>
                                         </tr>
@@ -150,16 +150,15 @@
                                         <tr *ngFor="let abono of abonos">
                                             <th scope="row">{{abono.id}}</th>
                                             <td>{{abono.monto | currency}}</td>
-                                            <td>{{abono.fecha | date:'yyyy-MM-dd HH:mm'}}</td>
+                                            <td>{{abono.fecha | date:'dd/MM/yyyy HH:mm'}}</td>
                                             <td>{{abono.metodopago}}</td>
                                             <td>
-                                                <span *ngFor="let detalle of abono.detallesMovimiento; let ultimo = last">
+                                                <div *ngFor="let detalle of abono.detallesMovimiento">
                                                     #{{detalle.id || detalle.detalleMovimientoId}}
                                                     - {{obtenerNombreProducto(detalle)}}
                                                     - <span [class.text-danger]="abonoMenorQuePrecio(detalle)" [class.text-success]="abonoCompleto(detalle)">Precio: {{obtenerPrecioMovimiento(detalle) | currency}}</span>
-                                                    - Abono: {{(detalle.montoAplicado ?? detalle.AbonoDetalleMovimiento?.montoAplicado) | currency}}<span *ngIf="!ultimo">, </span>
-                                                    <br>
-                                                </span>
+                                                    - Abono: {{(detalle.montoAplicado ?? detalle.AbonoDetalleMovimiento?.montoAplicado) | currency}}
+                                                </div>
                                             </td>
                                             <td>{{abono.comentario || '-'}}</td>
                                             <td class="text-nowrap">
