@@ -12,6 +12,10 @@ export class Abono {
     montoAplicado: number;
     id?: number;
     producto?: { nombre: string };
+    tipo?: string;
+    preciocompra?: number;
+    precioventa?: number;
+    AbonoDetalleMovimiento?: { montoAplicado: number };
     persona?: Persona;
   }> = [];
   persona?: Persona;

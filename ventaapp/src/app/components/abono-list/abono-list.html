@@ -38,7 +38,8 @@
 					<td>
 						<div *ngFor="let detalle of abono.detallesMovimiento">
 							#{{ detalle.id || detalle.detalleMovimientoId }}
-							<span class="text-muted">({{ detalle.montoAplicado | currency }})</span>
+							- {{ detalle.producto?.nombre || 'Producto no disponible' }}
+							<span class="text-muted">({{ (detalle.montoAplicado ?? detalle.AbonoDetalleMovimiento?.montoAplicado) | currency }})</span>
 						</div>
 					</td>
 					<td>{{ abono.persona ? (abono.persona.apellido + ' ' + abono.persona.nombres) : abono.personaId }}</td>

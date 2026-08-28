@@ -131,6 +131,43 @@ export class PersonaForm {
     );
   }
 
+  obtenerNombreProducto(detalle: Abono['detallesMovimiento'][number]): string {
+    if (detalle.producto?.nombre) {
+      return detalle.producto.nombre;
+    }
+
+    const detalleMovimiento = this.detallesMovimientos.find(item =>
+      item.id === (detalle.id || detalle.detalleMovimientoId)
+    );
+    return detalleMovimiento?.producto?.nombre || 'Producto no disponible';
+  }
+
+  obtenerPrecioMovimiento(detalle: Abono['detallesMovimiento'][number]): number {
+    const precioIncluido = detalle.tipo === 'compra'
+      ? detalle.preciocompra
+      : detalle.precioventa;
+    if (precioIncluido !== undefined) {
+      return precioIncluido;
+    }
+
+    const detalleMovimiento = this.detallesMovimientos.find(item =>
+      item.id === (detalle.id || detalle.detalleMovimientoId)
+    );
+    return detalleMovimiento?.tipo === 'compra'
+      ? detalleMovimiento.preciocompra
+      : detalleMovimiento?.precioventa || 0;
+  }
+
+  abonoMenorQuePrecio(detalle: Abono['detallesMovimiento'][number]): boolean {
+    const montoAplicado = detalle.montoAplicado ?? detalle.AbonoDetalleMovimiento?.montoAplicado ?? 0;
+    return Number(montoAplicado) < this.obtenerPrecioMovimiento(detalle);
+  }
+
+  abonoCompleto(detalle: Abono['detallesMovimiento'][number]): boolean {
+    const montoAplicado = detalle.montoAplicado ?? detalle.AbonoDetalleMovimiento?.montoAplicado ?? 0;
+    return Number(montoAplicado) >= this.obtenerPrecioMovimiento(detalle);
+  }
+
   editarAbono(id: number) {
     this.redirigir(`/abono-form/${id}?returnUrl=/persona-form/${this.persona.id}`);
   }

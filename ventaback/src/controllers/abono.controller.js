@@ -12,7 +12,8 @@ const incluirRelaciones = [
 	{
 		model: DetalleMovimiento,
 		as: 'detallesMovimiento',
-		through: { attributes: ['montoAplicado'] }
+		through: { attributes: ['montoAplicado'] },
+		include: [{ model: Producto, as: 'producto' }]
 	},
 	{ model: Persona, as: 'persona' }
 ];

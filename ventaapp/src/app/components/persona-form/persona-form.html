@@ -154,7 +154,11 @@
                                             <td>{{abono.metodopago}}</td>
                                             <td>
                                                 <span *ngFor="let detalle of abono.detallesMovimiento; let ultimo = last">
-                                                    #{{detalle.detalleMovimientoId}} ({{detalle.montoAplicado | currency}})<span *ngIf="!ultimo">, </span>
+                                                    #{{detalle.id || detalle.detalleMovimientoId}}
+                                                    - {{obtenerNombreProducto(detalle)}}
+                                                    - <span [class.text-danger]="abonoMenorQuePrecio(detalle)" [class.text-success]="abonoCompleto(detalle)">Precio: {{obtenerPrecioMovimiento(detalle) | currency}}</span>
+                                                    - Abono: {{(detalle.montoAplicado ?? detalle.AbonoDetalleMovimiento?.montoAplicado) | currency}}<span *ngIf="!ultimo">, </span>
+                                                    <br>
                                                 </span>
                                             </td>
                                             <td>{{abono.comentario || '-'}}</td>
