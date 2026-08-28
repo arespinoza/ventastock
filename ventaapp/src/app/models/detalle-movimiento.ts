@@ -9,7 +9,6 @@ export class DetalleMovimiento {
     subtotal!: number;
     tipo!: string;
     fecha!: string;
-    convalidado!: boolean;
     razonsocial!: string;
     producto!: Producto;
     persona!: Persona;
@@ -22,7 +21,6 @@ export class DetalleMovimiento {
         this.subtotal = 0;
         this.tipo = "venta";
         this.fecha = "";
-        this.convalidado = true;
         this.producto = new Producto();
         this.persona = new Persona();
         this.estadopago = "pendiente";

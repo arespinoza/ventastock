@@ -25,7 +25,6 @@
                     <th scope="col">Cliente</th>
                     <th scope="col">$$Venta</th>
                     <th scope="col">Fecha</th>
-                    <th scope="col">Convalidado?</th>
                     <th scope="col">Acciones</th>
                 </tr>
             </thead>
@@ -44,9 +43,7 @@
                     <td>{{dm.persona.apellido}}-{{dm.persona.nombres}}</td>
                     <td>{{dm.precioventa | currency}}</td>
                     <td>{{dm.fecha | date:'short'}}</td>
-                    <td><span class="badge" [class.bg-success]="dm.convalidado" [class.bg-danger]="!dm.convalidado">
-                        {{dm.convalidado ? 'Sí' : 'No'}}
-                    </span></td>
+
     
                     <td>
                         <button class="btn btn-warning btn-sm" title="Editar"
