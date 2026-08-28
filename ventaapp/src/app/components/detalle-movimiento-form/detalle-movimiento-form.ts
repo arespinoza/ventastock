@@ -24,6 +24,8 @@ export class DetalleMovimientoForm {
   // Variable temporal para enlazar el texto del input
   productoSeleccionadoTexto: string = '';
   personaSeleccionadaTexto: string = '';
+  rutaRetorno = '/detalle-movimiento-list';
+  personaIdPendiente: number | null = null;
 
   constructor(private router:Router,
               private productoApi: ProductoApi,
@@ -39,6 +41,9 @@ export class DetalleMovimientoForm {
     this.getPersonas();
   }
   ngOnInit(){
+    this.rutaRetorno = this.activatedRoute.snapshot.queryParamMap.get('returnUrl') || '/detalle-movimiento-list';
+    const personaId = this.activatedRoute.snapshot.queryParamMap.get('personaId');
+    this.personaIdPendiente = personaId ? Number(personaId) : null;
     this.activatedRoute.params.subscribe(params => {
       let id = params['id'];
       if (id == 0) {
@@ -73,6 +78,7 @@ export class DetalleMovimientoForm {
     this.productoApi.getProductos().subscribe(
       data => {
         this.productos = data;
+        this.cd.detectChanges();
       },
       error => {
         console.log(error);
@@ -84,6 +90,14 @@ export class DetalleMovimientoForm {
     this.personaApi.getPersonas().subscribe(
       data => {
         this.personas = data;
+        if (this.personaIdPendiente !== null) {
+          const persona = this.personas.find(item => item.id === this.personaIdPendiente);
+          if (persona) {
+            this.detalleMovimiento.persona = persona;
+            this.personaSeleccionadaTexto = `${persona.apellido} ${persona.nombres}`;
+          }
+        }
+        this.cd.detectChanges();
       },
       error => {
         console.log(error);
@@ -97,7 +111,7 @@ export class DetalleMovimientoForm {
             if (response.status === '1') {
               this.toast.show('Detalle agregado exitosamente', 'success');
               //alert('Detalle agregado exitosamente');
-              this.router.navigate(['/detalle-movimiento-list']);
+              this.router.navigateByUrl(this.rutaRetorno);
             } else {
               this.toast.show('Error al agregar el Detalle', 'error')
               alert('Error al agregar el Detalle');
@@ -123,7 +137,7 @@ export class DetalleMovimientoForm {
           this.toast.show('Error al actualizar el Detalle', 'error');
           //alert('Error al actualizar el Detalle');
         }
-        this.router.navigate(['/detalle-movimiento-list']);
+        this.router.navigateByUrl(this.rutaRetorno);
       },
       error=>{
         console.log(error);
@@ -172,6 +186,6 @@ export class DetalleMovimientoForm {
   }
 
   redirigir(path: string){
-    this.router.navigate([path]);
+    this.router.navigateByUrl(path === '/detalle-movimiento-list' ? this.rutaRetorno : path);
   }
 }

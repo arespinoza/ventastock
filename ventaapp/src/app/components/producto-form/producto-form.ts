@@ -22,9 +22,9 @@ export class ProductoForm {
   fotoSeleccionada?: File;
   private fotoOriginal = '';
   subiendoImagen = false;
-  imagenParaEditar: Event | null = null;
   fotoRecortada: Blob | null = null;
   editorAbierto = false;
+  imagenUrlParaEditar = '';
   brillo = 100;
   categorias: any[] = [];
   categoriaIds: number[] = [];
@@ -66,7 +66,7 @@ export class ProductoForm {
     }
 
     this.fotoSeleccionada = file;
-    this.imagenParaEditar = event;
+    this.imagenUrlParaEditar = '';
     this.fotoRecortada = null;
     if (this.producto.foto.startsWith('blob:')) {
       URL.revokeObjectURL(this.producto.foto);
@@ -76,12 +76,13 @@ export class ProductoForm {
   }
 
   abrirEditor(): void {
-    if (!this.fotoSeleccionada || !this.imagenParaEditar) {
+    if (!this.fotoSeleccionada && !this.producto.foto) {
       this.toastService.show('Primero selecciona o toma una foto', 'error');
       return;
     }
     this.brillo = 100;
     this.fotoRecortada = null;
+    this.imagenUrlParaEditar = this.fotoSeleccionada ? '' : this.producto.foto;
     this.editorAbierto = true;
   }
 
@@ -90,21 +91,23 @@ export class ProductoForm {
   }
 
   async aplicarEdicion(): Promise<void> {
-    if (!this.fotoRecortada || !this.fotoSeleccionada) {
+    if (!this.fotoRecortada) {
       return;
     }
 
     const fotoEditada = await this.aplicarBrillo(this.fotoRecortada);
-    const nombre = this.fotoSeleccionada.name.replace(/\.[^.]+$/, '') || 'producto';
+    const nombre = this.fotoSeleccionada?.name.replace(/\.[^.]+$/, '') || 'producto';
     const tipo = fotoEditada.type || 'image/jpeg';
     this.fotoSeleccionada = new File([fotoEditada], `${nombre}.jpg`, { type: tipo });
     this.reemplazarPrevisualizacion(URL.createObjectURL(this.fotoSeleccionada));
     this.editorAbierto = false;
+    this.imagenUrlParaEditar = '';
     this.fotoRecortada = null;
   }
 
   cerrarEditor(): void {
     this.editorAbierto = false;
+    this.imagenUrlParaEditar = '';
     this.fotoRecortada = null;
   }
 

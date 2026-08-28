@@ -11,7 +11,6 @@ const DetalleMovimiento = sequelize.define('DetalleMovimiento', {
     tipo: {type: DataTypes.STRING, allowNull: false},
     fecha: {type: DataTypes.DATE, allowNull: false},
     convalidado: {type: DataTypes.BOOLEAN, allowNull: false},
-    razonsocial: {type: DataTypes.STRING, allowNull: true},
     estadopago: {type: DataTypes.STRING, allowNull: false}
 }, {
     tableName: 'detalles_movimiento',

@@ -24,8 +24,6 @@
                     <th scope="col">Apellido</th>
                     <th scope="col">Nombres</th>
                     <th scope="col">Referencia</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Celular</th>
                     <th scope="col">Acciones</th>
                 </tr>
             </thead>
@@ -36,8 +34,6 @@
                     <td>{{persona.apellido}}</td>
                     <td>{{persona.nombres}}</td>
                     <td>{{persona.referencia}}</td>
-                    <td>{{persona.correo_electronico}}</td>
-                    <td>{{persona.nro_celular}}</td>
                     <td>
                         <button class="btn btn-warning btn-sm" title="Editar"
                             (click)="navigateTo('persona-form/' + persona.id)">

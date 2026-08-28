@@ -18,6 +18,7 @@ export class PersonaForm {
   accion: string = 'Agregar';
   persona: Persona;
   totalVentas: number = 0;
+  rutaRetorno = '/persona-list';
 
   detallesMovimientos: Array<DetalleMovimiento> = [];
 
@@ -32,6 +33,7 @@ export class PersonaForm {
   }
 
   ngOnInit(){
+    this.rutaRetorno = this.activatedRoute.snapshot.queryParamMap.get('returnUrl') || '/persona-list';
     this.activatedRoute.params.subscribe(params => {
       let id = params['id'];
       if (id == 0) {
@@ -50,7 +52,7 @@ export class PersonaForm {
         console.log('Cliente agregado:', response);
         if (response.status === '1') {
           this.toastService.show('Cliente agregado exitosamente', 'success')
-          this.router.navigate(['/persona-list']);
+          this.router.navigateByUrl(this.rutaRetorno);
         } else {
           this.toastService.show('Error al agregar el cliente', 'error')
         }
@@ -69,7 +71,7 @@ export class PersonaForm {
         console.log('Cliente modificado:', response);
         if (response.status === '1') {
           this.toastService.show('Cliente modificado exitosamente', 'success')
-          this.router.navigate(['/persona-list']);
+          this.router.navigateByUrl(this.rutaRetorno);
         } else {
           this.toastService.show('Error al modificar el cliente', 'error')
         }
@@ -120,10 +122,10 @@ export class PersonaForm {
     }
   }
   salir() {
-    this.router.navigate(['persona-list']);
+    this.router.navigateByUrl(this.rutaRetorno);
   }
   redirigir(path: string){
     console.log(path);
-    this.router.navigate([path]);
+    this.router.navigateByUrl(path);
   }
 }

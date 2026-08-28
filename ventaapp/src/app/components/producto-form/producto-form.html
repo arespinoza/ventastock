@@ -57,7 +57,7 @@
                                         <input type="file" accept="image/*" capture="environment" hidden (change)="onFileSelected($event)">
                                     </label>
                                     <button type="button" class="btn btn-outline-success btn-sm"
-                                        (click)="abrirEditor()" [disabled]="!fotoSeleccionada">
+                                        (click)="abrirEditor()" [disabled]="!fotoSeleccionada && !producto.foto">
                                         <i class="bi bi-crop"></i> Recortar
                                     </button>
                                 </div>
@@ -122,7 +122,8 @@
             </div>
             <div class="modal-body">
                 <image-cropper
-                    [imageChangedEvent]="imagenParaEditar"
+                    [imageFile]="fotoSeleccionada"
+                    [imageURL]="imagenUrlParaEditar"
                     [maintainAspectRatio]="false"
                     format="jpeg"
                     output="blob"

@@ -10,7 +10,6 @@ export class DetalleMovimiento {
     tipo!: string;
     fecha!: string;
     convalidado!: boolean;
-    razonsocial!: string;
     producto!: Producto;
     persona!: Persona;
     estadopago: string;
@@ -23,7 +22,6 @@ export class DetalleMovimiento {
         this.tipo = "venta";
         this.fecha = "";
         this.convalidado = true;
-        this.razonsocial = "";
         this.producto = new Producto();
         this.persona = new Persona();
         this.estadopago = "pendiente";
