@@ -6,9 +6,14 @@ export class Abono {
   fecha!: string;
   metodopago!: string;
   comentario!: string;
-  detalleMovimientoId!: number;
   personaId!: number;
-  detalleMovimiento?: { id: number; fecha?: string; tipo?: string };
+  detallesMovimiento: Array<{
+    detalleMovimientoId: number;
+    montoAplicado: number;
+    id?: number;
+    producto?: { nombre: string };
+    persona?: Persona;
+  }> = [];
   persona?: Persona;
 
   constructor() {
@@ -16,7 +21,6 @@ export class Abono {
     this.fecha = new Date().toISOString();
     this.metodopago = 'Efectivo';
     this.comentario = '';
-    this.detalleMovimientoId = 0;
     this.personaId = 0;
   }
 }

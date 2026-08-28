@@ -7,6 +7,8 @@ import { AbonoApi } from '../../services/abono-api';
 import { Persona } from '../../models/persona';
 import { PersonaApi } from '../../services/persona-api';
 import { ToastService } from '../../services/toast';
+import { DetalleMovimiento } from '../../models/detalle-movimiento';
+import { DetalleMovimientoApi } from '../../services/detalle-movimiento-api';
 
 @Component({
 	selector: 'app-abono-form',
@@ -18,6 +20,7 @@ export class AbonoForm {
 	accion = 'Agregar';
 	abono = new Abono();
 	personas: Persona[] = [];
+	detallesMovimiento: DetalleMovimiento[] = [];
 
 	constructor(
 		private abonoApi: AbonoApi,
@@ -25,7 +28,8 @@ export class AbonoForm {
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
 		private toast: ToastService,
-		private cd: ChangeDetectorRef
+		private cd: ChangeDetectorRef,
+		private detalleMovimientoApi: DetalleMovimientoApi
 	) {}
 
 	ngOnInit() {
@@ -35,6 +39,13 @@ export class AbonoForm {
 				this.cd.detectChanges();
 			},
 			error: () => this.toast.show('No se pudieron cargar las personas', 'error')
+		});
+		this.detalleMovimientoApi.getDetallesMovimiento().subscribe({
+			next: detalles => {
+				this.detallesMovimiento = detalles as DetalleMovimiento[];
+				this.cd.detectChanges();
+			},
+			error: () => this.toast.show('No se pudieron cargar los detalles de movimiento', 'error')
 		});
 
 		const id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
@@ -46,8 +57,11 @@ export class AbonoForm {
 			this.abonoApi.getAbono(id).subscribe({
 				next: data => {
 					this.abono = data as Abono;
-					this.abono.detalleMovimientoId = this.abono.detalleMovimiento?.id || 0;
 					this.abono.personaId = this.abono.persona?.id || 0;
+					this.abono.detallesMovimiento = (this.abono as any).detallesMovimiento?.map((detalle: any) => ({
+						detalleMovimientoId: detalle.id,
+						montoAplicado: Number(detalle.AbonoDetalleMovimiento?.montoAplicado || 0)
+					})) || [];
 					this.abono.fecha = this.toInputDate(this.abono.fecha);
 					this.cd.detectChanges();
 				},
@@ -58,10 +72,31 @@ export class AbonoForm {
 				this.abono.personaId = personaId;
 			}
 			if (detalleMovimientoId > 0) {
-				this.abono.detalleMovimientoId = detalleMovimientoId;
+				this.abono.detallesMovimiento = [{ detalleMovimientoId, montoAplicado: this.abono.monto }];
+			}
+			if (!this.abono.detallesMovimiento.length) {
+				this.agregarDetalle();
 			}
 			this.abono.fecha = this.toInputDate(this.abono.fecha);
 		}
+	}
+
+	agregarDetalle() {
+		this.abono.detallesMovimiento.push({ detalleMovimientoId: 0, montoAplicado: 0 });
+	}
+
+	quitarDetalle(indice: number) {
+		if (this.abono.detallesMovimiento.length > 1) {
+			this.abono.detallesMovimiento.splice(indice, 1);
+		}
+	}
+
+	totalAplicado() {
+		return this.abono.detallesMovimiento.reduce((total, detalle) => total + Number(detalle.montoAplicado || 0), 0);
+	}
+
+	totalAplicadoValido() {
+		return Math.abs(this.totalAplicado() - Number(this.abono.monto)) <= 0.01;
 	}
 
 	guardar() {

@@ -4,6 +4,7 @@ const ProductoCategoria = require('./producto-categoria.model');
 const DetalleMovimiento = require('./detallemovimiento.model');
 const Abono = require('./abono.model');
 const Persona = require('./persona.model');
+const AbonoDetalleMovimiento = require('./abono-detalle-movimiento.model');
 
 Producto.belongsToMany(Categoria, {
     through: ProductoCategoria,
@@ -18,9 +19,19 @@ Categoria.belongsToMany(Producto, {
     otherKey: 'productoId'
 });
 
-Abono.belongsTo(DetalleMovimiento, { as: 'detalleMovimiento', foreignKey: 'detalleMovimientoId' });
-DetalleMovimiento.hasMany(Abono, { as: 'abonos', foreignKey: 'detalleMovimientoId' });
+Abono.belongsToMany(DetalleMovimiento, {
+    through: AbonoDetalleMovimiento,
+    as: 'detallesMovimiento',
+    foreignKey: 'abonoId',
+    otherKey: 'detalleMovimientoId'
+});
+DetalleMovimiento.belongsToMany(Abono, {
+    through: AbonoDetalleMovimiento,
+    as: 'abonos',
+    foreignKey: 'detalleMovimientoId',
+    otherKey: 'abonoId'
+});
 Abono.belongsTo(Persona, { as: 'persona', foreignKey: 'personaId' });
 Persona.hasMany(Abono, { as: 'abonos', foreignKey: 'personaId' });
 
-module.exports = { Producto, Categoria, ProductoCategoria, DetalleMovimiento, Abono, Persona };
+module.exports = { Producto, Categoria, ProductoCategoria, DetalleMovimiento, Abono, Persona, AbonoDetalleMovimiento };

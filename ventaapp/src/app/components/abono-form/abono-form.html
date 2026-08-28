@@ -1,0 +1,116 @@
+<div class="container mt-5">
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item">
+				<a class="text-decoration-none text-reset" role="button" (click)="irAlInicio()">Home</a>
+			</li>
+			<li class="breadcrumb-item">
+				<a class="text-decoration-none text-reset" role="button" (click)="salir()">Abonos</a>
+			</li>
+			<li class="breadcrumb-item active" aria-current="page">Formulario</li>
+		</ol>
+	</nav>
+
+	<div class="row justify-content-center">
+		<div class="col-md-8">
+			<div class="card shadow-sm">
+				<div class="card-header bg-primary text-white">
+					<h3 class="mb-0">Formulario de Abono</h3>
+				</div>
+				<div class="card-body bg-secondary bg-opacity-25">
+					<form #abonoForm="ngForm" (ngSubmit)="abonoForm.valid && guardar()">
+						<div class="mb-3">
+							<label for="monto" class="form-label">Monto</label>
+							<div class="input-group">
+								<span class="input-group-text">$</span>
+								<input id="monto" name="monto" type="number" class="form-control" min="0.01" step="0.01"
+									[(ngModel)]="abono.monto" required>
+							</div>
+						</div>
+
+						<div class="mb-3">
+							<label for="fecha" class="form-label">Fecha</label>
+							<input id="fecha" name="fecha" type="datetime-local" class="form-control"
+								[(ngModel)]="abono.fecha" required>
+						</div>
+
+						<div class="mb-3">
+							<label for="metodopago" class="form-label">Método de pago</label>
+							<select id="metodopago" name="metodopago" class="form-select" [(ngModel)]="abono.metodopago" required>
+								<option value="Efectivo">Efectivo</option>
+								<option value="Transferencia">Transferencia</option>
+								<option value="Tarjeta">Tarjeta</option>
+							</select>
+						</div>
+
+						<div class="mb-3">
+							<div class="d-flex justify-content-between align-items-center mb-2">
+								<label class="form-label mb-0">Aplicación del abono</label>
+								<button type="button" class="btn btn-sm btn-outline-primary" (click)="agregarDetalle()">
+									<i class="bi bi-plus-circle"></i> Agregar detalle
+								</button>
+							</div>
+							<div class="row align-items-end mb-2" *ngFor="let aplicacion of abono.detallesMovimiento; let indice = index">
+								<div class="col-md-7">
+									<label [for]="'detalleMovimientoId-' + indice" class="form-label">Detalle de movimiento</label>
+									<select [id]="'detalleMovimientoId-' + indice" [name]="'detalleMovimientoId-' + indice"
+										class="form-select" [(ngModel)]="aplicacion.detalleMovimientoId" required>
+										<option [ngValue]="0" disabled>Seleccione un detalle</option>
+										<option *ngFor="let detalle of detallesMovimiento" [ngValue]="detalle.id">
+											#{{ detalle.id }} - {{ detalle.producto.nombre }} - {{ detalle.persona.apellido }} {{ detalle.persona.nombres }}
+										</option>
+									</select>
+								</div>
+								<div class="col-md-4">
+									<label [for]="'montoAplicado-' + indice" class="form-label">Monto aplicado</label>
+									<input [id]="'montoAplicado-' + indice" [name]="'montoAplicado-' + indice" type="number"
+										class="form-control" min="0.01" step="0.01" [(ngModel)]="aplicacion.montoAplicado" required>
+								</div>
+								<div class="col-md-1">
+									<button type="button" class="btn btn-outline-danger" title="Quitar detalle"
+										(click)="quitarDetalle(indice)" [disabled]="abono.detallesMovimiento.length === 1">
+										<i class="bi bi-trash"></i>
+									</button>
+								</div>
+							</div>
+							<div class="text-end small" [class.text-danger]="!totalAplicadoValido()">
+								Aplicado: {{ totalAplicado() | currency }} de {{ abono.monto | currency }}
+							</div>
+						</div>
+
+						<div class="mb-3">
+							<div class="mb-3">
+								<label for="personaId" class="form-label">Persona</label>
+								<select id="personaId" name="personaId" class="form-select" [(ngModel)]="abono.personaId" required>
+									<option [ngValue]="0" disabled>Seleccione una persona</option>
+									<option *ngFor="let persona of personas" [ngValue]="persona.id">
+										{{ persona.apellido }} {{ persona.nombres }}
+									</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="mb-4">
+							<label for="comentario" class="form-label">Comentario</label>
+							<textarea id="comentario" name="comentario" class="form-control" rows="3"
+								[(ngModel)]="abono.comentario"></textarea>
+						</div>
+
+						<div class="d-flex gap-2">
+							<button type="button" class="btn btn-secondary" (click)="salir()">Cancelar</button>
+							<button type="submit" class="btn"
+								[disabled]="!abonoForm.valid || !totalAplicadoValido()"
+								[class.btn-success]="accion === 'Agregar'"
+								[class.btn-warning]="accion === 'Modificar'">
+								<i class="bi"
+									[class.bi-plus-circle]="accion === 'Agregar'"
+									[class.bi-pencil-square]="accion === 'Modificar'"></i>
+								{{ accion }}
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
