@@ -20,11 +20,22 @@
 				<div class="card-body bg-secondary bg-opacity-25">
 					<form #abonoForm="ngForm" (ngSubmit)="abonoForm.valid && guardar()">
 						<div class="mb-3">
+							<label for="personaId" class="form-label">Cliente</label>
+							<select id="personaId" name="personaId" class="form-select" [(ngModel)]="abono.personaId"
+								(ngModelChange)="seleccionarPersona($event)" required>
+								<option [ngValue]="0" disabled>Seleccione un cliente</option>
+								<option *ngFor="let persona of personas" [ngValue]="persona.id">
+									{{ persona.apellido }} {{ persona.nombres }}
+								</option>
+							</select>
+						</div>
+
+						<div class="mb-3">
 							<label for="monto" class="form-label">Monto</label>
 							<div class="input-group">
 								<span class="input-group-text">$</span>
 								<input id="monto" name="monto" type="number" class="form-control" min="0.01" step="0.01"
-									[(ngModel)]="abono.monto" required>
+									[ngModel]="abono.monto" (ngModelChange)="actualizarMonto($event)" required>
 							</div>
 						</div>
 
@@ -57,7 +68,7 @@
 										class="form-select" [(ngModel)]="aplicacion.detalleMovimientoId" required>
 										<option [ngValue]="0" disabled>Seleccione un detalle</option>
 										<option *ngFor="let detalle of detallesMovimiento" [ngValue]="detalle.id">
-											#{{ detalle.id }} - {{ detalle.producto.nombre }} - {{ detalle.persona.apellido }} {{ detalle.persona.nombres }}
+											#{{ detalle.id }} - {{ detalle.producto.nombre }} - Venta: {{ detalle.precioventa | currency }}
 										</option>
 									</select>
 								</div>
@@ -76,17 +87,8 @@
 							<div class="text-end small" [class.text-danger]="!totalAplicadoValido()">
 								Aplicado: {{ totalAplicado() | currency }} de {{ abono.monto | currency }}
 							</div>
-						</div>
-
-						<div class="mb-3">
-							<div class="mb-3">
-								<label for="personaId" class="form-label">Persona</label>
-								<select id="personaId" name="personaId" class="form-select" [(ngModel)]="abono.personaId" required>
-									<option [ngValue]="0" disabled>Seleccione una persona</option>
-									<option *ngFor="let persona of personas" [ngValue]="persona.id">
-										{{ persona.apellido }} {{ persona.nombres }}
-									</option>
-								</select>
+							<div *ngIf="!totalAplicadoValido()" class="text-danger small">
+								Distribuya exactamente el monto total entre los detalles seleccionados.
 							</div>
 						</div>
 

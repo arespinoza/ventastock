@@ -40,14 +40,6 @@ export class AbonoForm {
 			},
 			error: () => this.toast.show('No se pudieron cargar las personas', 'error')
 		});
-		this.detalleMovimientoApi.getDetallesMovimiento().subscribe({
-			next: detalles => {
-				this.detallesMovimiento = detalles as DetalleMovimiento[];
-				this.cd.detectChanges();
-			},
-			error: () => this.toast.show('No se pudieron cargar los detalles de movimiento', 'error')
-		});
-
 		const id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
 		const personaId = Number(this.activatedRoute.snapshot.queryParamMap.get('personaId'));
 		const detalleMovimientoId = Number(this.activatedRoute.snapshot.queryParamMap.get('detalleMovimientoId'));
@@ -62,6 +54,7 @@ export class AbonoForm {
 						detalleMovimientoId: detalle.id,
 						montoAplicado: Number(detalle.AbonoDetalleMovimiento?.montoAplicado || 0)
 					})) || [];
+					this.cargarDetallesMovimiento(this.abono.personaId);
 					this.abono.fecha = this.toInputDate(this.abono.fecha);
 					this.cd.detectChanges();
 				},
@@ -70,6 +63,7 @@ export class AbonoForm {
 		} else {
 			if (personaId > 0) {
 				this.abono.personaId = personaId;
+				this.cargarDetallesMovimiento(personaId);
 			}
 			if (detalleMovimientoId > 0) {
 				this.abono.detallesMovimiento = [{ detalleMovimientoId, montoAplicado: this.abono.monto }];
@@ -79,6 +73,37 @@ export class AbonoForm {
 			}
 			this.abono.fecha = this.toInputDate(this.abono.fecha);
 		}
+	}
+
+	cargarDetallesMovimiento(personaId: number, conservarAplicaciones = true) {
+		if (!personaId) {
+			this.detallesMovimiento = [];
+			return;
+		}
+
+		this.detalleMovimientoApi.getDetallesMovimientoPersona(personaId).subscribe({
+			next: detalles => {
+				const detallesRecibidos = detalles as DetalleMovimiento[];
+				this.detallesMovimiento = detallesRecibidos.filter(detalle =>
+					detalle.persona?.id === personaId || (detalle as any).personaId === personaId
+				);
+				if (!this.detallesMovimiento.length && detallesRecibidos.length &&
+					detallesRecibidos.every(detalle => !detalle.persona && !(detalle as any).personaId)) {
+					this.detallesMovimiento = detallesRecibidos;
+				}
+				if (!conservarAplicaciones) {
+					this.abono.detallesMovimiento = [];
+					this.agregarDetalle();
+				}
+				this.cd.detectChanges();
+			},
+			error: () => this.toast.show('No se pudieron cargar los detalles de movimiento', 'error')
+		});
+	}
+
+	seleccionarPersona(personaId: number | string) {
+		this.abono.personaId = Number(personaId);
+		this.cargarDetallesMovimiento(this.abono.personaId, false);
 	}
 
 	agregarDetalle() {
@@ -97,6 +122,15 @@ export class AbonoForm {
 
 	totalAplicadoValido() {
 		return Math.abs(this.totalAplicado() - Number(this.abono.monto)) <= 0.01;
+	}
+
+	actualizarMonto(monto: number) {
+		this.abono.monto = Number(monto) || 0;
+		if (this.abono.detallesMovimiento.length === 1 &&
+			(!this.abono.detallesMovimiento[0].montoAplicado ||
+			this.abono.detallesMovimiento[0].montoAplicado === 0)) {
+			this.abono.detallesMovimiento[0].montoAplicado = this.abono.monto;
+		}
 	}
 
 	guardar() {
