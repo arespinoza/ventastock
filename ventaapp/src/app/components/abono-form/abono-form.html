@@ -54,21 +54,21 @@
 							</select>
 						</div>
 
-						<div class="mb-3">
+						<div class="mb-3 bg-info bg-opacity-10 p-3 rounded">
 							<div class="d-flex justify-content-between align-items-center mb-2">
 								<label class="form-label mb-0">Aplicación del abono</label>
 								<button type="button" class="btn btn-sm btn-outline-primary" (click)="agregarDetalle()">
 									<i class="bi bi-plus-circle"></i> Agregar detalle
 								</button>
 							</div>
-							<div class="row align-items-end mb-2" *ngFor="let aplicacion of abono.detallesMovimiento; let indice = index">
-								<div class="col-md-7">
+							<div class="row align-items-end mb-2 border-top border-bottom border-secondary pe-3" *ngFor="let aplicacion of abono.detallesMovimiento; let indice = index">
+								<div class="col-md-7 ">
 									<label [for]="'detalleMovimientoId-' + indice" class="form-label">Detalle de movimiento</label>
 									<select [id]="'detalleMovimientoId-' + indice" [name]="'detalleMovimientoId-' + indice"
 										class="form-select" [(ngModel)]="aplicacion.detalleMovimientoId" required>
 										<option [ngValue]="0" disabled>Seleccione un detalle</option>
 										<option *ngFor="let detalle of detallesMovimiento" [ngValue]="detalle.id">
-											#{{ detalle.id }} - {{ detalle.producto.nombre }} - Venta: {{ detalle.precioventa | currency }}
+											#{{ detalle.id }} - {{ detalle.producto.nombre }} - {{ detalle.precioventa | currency }}
 										</option>
 									</select>
 								</div>

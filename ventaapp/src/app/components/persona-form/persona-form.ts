@@ -7,6 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { ToastService } from '../../services/toast';
 import { DetalleMovimiento } from '../../models/detalle-movimiento';
 import { DetalleMovimientoApi } from '../../services/detalle-movimiento-api';
+import { Abono } from '../../models/abono';
+import { AbonoApi } from '../../services/abono-api';
 
 @Component({
   selector: 'app-persona-form',
@@ -21,6 +23,7 @@ export class PersonaForm {
   rutaRetorno = '/persona-list';
 
   detallesMovimientos: Array<DetalleMovimiento> = [];
+  abonos: Array<Abono> = [];
 
 
     constructor(private router: Router,
@@ -28,7 +31,8 @@ export class PersonaForm {
               private activatedRoute: ActivatedRoute,
               private cd: ChangeDetectorRef,
               private toastService: ToastService,
-              private detalleMovimientoApi: DetalleMovimientoApi) {
+              private detalleMovimientoApi: DetalleMovimientoApi,
+              private abonoApi: AbonoApi) {
     this.persona = new Persona();
   }
 
@@ -43,6 +47,7 @@ export class PersonaForm {
         this.accion = "modificar";
         this.cargarPersona(id);
         this.getDetallesMovimientosPersona(id);
+        this.getAbonosPersona(id);
       }
     })
   }
@@ -113,11 +118,74 @@ export class PersonaForm {
       this.cd.detectChanges();
     });
   }
+
+  getAbonosPersona(id: number) {
+    this.abonoApi.getAbonos(undefined, id).subscribe(
+      data => {
+        this.abonos = data as Array<Abono>;
+        this.cd.detectChanges();
+      },
+      error => {
+        console.error('Error al cargar los abonos de la persona:', error);
+      }
+    );
+  }
+
+  editarAbono(id: number) {
+    this.redirigir(`/abono-form/${id}?returnUrl=/persona-form/${this.persona.id}`);
+  }
+
+  eliminarAbono(id: number) {
+    if (!confirm('¿Estás seguro de eliminar este abono?')) {
+      return;
+    }
+
+    this.abonoApi.deleteAbono(id).subscribe({
+      next: response => {
+        if ((response as { status?: string }).status === '1') {
+          this.toastService.show('Abono eliminado exitosamente', 'success');
+          this.getAbonosPersona(this.persona.id);
+        } else {
+          this.toastService.show('No se pudo eliminar el abono', 'error');
+        }
+      },
+      error: error => {
+        console.error('Error al eliminar el abono:', error);
+        this.toastService.show('No se pudo eliminar el abono', 'error');
+      }
+    });
+  }
+
   deleteDetalleMovimiento(id: number) {
     if (confirm('¿Estás seguro de eliminar este detalle?')) {
       this.detalleMovimientoApi.deleteDetalleMovimiento(id).subscribe(() => {
         this.getDetallesMovimientosPersona(id);
         this.cd.detectChanges();
+      });
+    }
+  }
+  marcarDetalleMovimientoPagado(detalle: DetalleMovimiento) {
+    if (detalle.estadopago === 'pagado') {
+      return;
+    }
+
+    if (confirm('¿Confirmas marcar este detalle de movimiento como pagado?')) {
+      this.detalleMovimientoApi.updateDetalleMovimiento({
+        id: detalle.id,
+        estadopago: 'pagado'
+      }).subscribe({
+        next: response => {
+          if ((response as { status: string }).status === '1') {
+            detalle.estadopago = 'pagado';
+            this.toastService.show('Detalle marcado como pagado', 'success');
+          } else {
+            this.toastService.show('No se pudo marcar el detalle como pagado', 'error');
+          }
+        },
+        error: error => {
+          console.error('Error al marcar el detalle como pagado:', error);
+          this.toastService.show('Error al marcar el detalle como pagado', 'error');
+        }
       });
     }
   }

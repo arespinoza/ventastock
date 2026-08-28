@@ -62,15 +62,33 @@
            <div class="row mb-3">
             <div class="col-md-6">
               <label for="producto" class="form-label">Producto</label>
-              <input class="form-control" list="productos-list" 
-                    id="producto" name="producto" 
-                    placeholder="Escriba para buscar un producto..."
-                    [(ngModel)]="productoSeleccionadoTexto"
-                    (change)="onProductoSeleccionado()">
-              <datalist id="productos-list">
-                <!-- Las opciones se deberían cargar dinámicamente desde tu backend -->
-                <option *ngFor="let producto of productos" [value]="producto.nombre"></option>
-              </datalist>
+              <div class="product-search">
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-search"></i></span>
+                  <input class="form-control" id="producto" name="producto"
+                    placeholder="Buscar producto..." autocomplete="off"
+                    [(ngModel)]="productoSeleccionadoTexto">
+                </div>
+                <div class="product-results" *ngIf="productosFiltrados.length">
+                  <button type="button" class="product-result" *ngFor="let producto of productosFiltrados"
+                    (click)="seleccionarProducto(producto)">
+                    <span class="product-image">
+                      <img *ngIf="producto.foto" [src]="producto.foto" [alt]="producto.nombre">
+                      <i *ngIf="!producto.foto" class="bi bi-image text-muted"></i>
+                    </span>
+                    <span class="product-result-info">
+                      <strong>{{producto.nombre}}</strong>
+                      <small>Stock: {{producto.stock}}</small>
+                    </span>
+                  </button>
+                </div>
+                <div class="small text-muted mt-2" *ngIf="!productoSeleccionadoTexto.trim()">
+                  Escriba el nombre de un producto para buscar.
+                </div>
+                <div class="small text-muted mt-2" *ngIf="productoSeleccionadoTexto.trim() && !productosFiltrados.length">
+                  No hay productos con stock que coincidan con la búsqueda.
+                </div>
+              </div>
             </div>
             <div class="col-md-6">
               <label for="persona" class="form-label">Razón Social (Proveedor/Cliente)</label>

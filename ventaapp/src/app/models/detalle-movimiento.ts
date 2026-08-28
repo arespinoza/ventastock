@@ -16,8 +16,8 @@ export class DetalleMovimiento {
 
 
     constructor(){
-        this.cantidad = 0;
-        this.preciocompra = 0;
+        //this.cantidad = 0;
+        //this.preciocompra = 0;
         this.subtotal = 0;
         this.tipo = "venta";
         this.fecha = "";

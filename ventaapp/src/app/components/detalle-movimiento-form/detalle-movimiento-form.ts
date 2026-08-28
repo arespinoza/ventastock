@@ -77,7 +77,7 @@ export class DetalleMovimientoForm {
   getProductos() {
     this.productoApi.getProductos().subscribe(
       data => {
-        this.productos = data;
+        this.productos = data.filter((producto: Producto) => producto.stock > 0);
         this.cd.detectChanges();
       },
       error => {
@@ -103,6 +103,18 @@ export class DetalleMovimientoForm {
         console.log(error);
       }
     )
+  }
+
+  get productosFiltrados(): Array<Producto> {
+    const textoBusqueda = this.productoSeleccionadoTexto.trim().toLowerCase();
+
+    if (!textoBusqueda) {
+      return [];
+    }
+
+    return this.productos.filter(producto =>
+      producto.nombre.toLowerCase().includes(textoBusqueda)
+    );
   }
 
   guardarDetalleMovimiento() {
@@ -171,6 +183,14 @@ export class DetalleMovimientoForm {
       // Si el usuario escribe algo que no existe en la lista
       //this.detalleMovimiento.producto = null;
     }
+  }
+
+  seleccionarProducto(producto: Producto) {
+    this.productoSeleccionadoTexto = producto.nombre;
+    this.detalleMovimiento.producto = producto;
+    this.detalleMovimiento.precioventa = producto.precioventa;
+    this.detalleMovimiento.preciocompra = producto.preciocompra;
+    this.calcularSubtotal();
   }
 
   onPersonaSeleccionada() {

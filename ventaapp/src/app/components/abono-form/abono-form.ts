@@ -21,6 +21,7 @@ export class AbonoForm {
 	abono = new Abono();
 	personas: Persona[] = [];
 	detallesMovimiento: DetalleMovimiento[] = [];
+	rutaRetorno = '/abono-list';
 
 	constructor(
 		private abonoApi: AbonoApi,
@@ -33,6 +34,7 @@ export class AbonoForm {
 	) {}
 
 	ngOnInit() {
+		this.rutaRetorno = this.activatedRoute.snapshot.queryParamMap.get('returnUrl') || '/abono-list';
 		this.personaApi.getPersonas().subscribe({
 			next: personas => {
 				this.personas = personas;
@@ -152,7 +154,7 @@ export class AbonoForm {
 	}
 
 	salir() {
-		this.router.navigateByUrl('/abono-list');
+		this.router.navigateByUrl(this.rutaRetorno);
 	}
 
 	irAlInicio() {

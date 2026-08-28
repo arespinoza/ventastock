@@ -17,7 +17,6 @@ export class Abono {
   persona?: Persona;
 
   constructor() {
-    this.monto = 0;
     this.fecha = new Date().toISOString();
     this.metodopago = 'Efectivo';
     this.comentario = '';
