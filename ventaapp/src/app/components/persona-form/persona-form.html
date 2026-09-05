@@ -140,42 +140,46 @@
                                             <th scope="col">ID</th>
                                             <th scope="col">Monto</th>
                                             <th scope="col">Fecha</th>
-                                            <th scope="col">Método de pago</th>
-                                            <th scope="col">Detalle de movimiento</th>
-                                            <th scope="col">Comentario</th>
+                                            <th scope="col">Pago</th>
                                             <th scope="col">Acciones</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr *ngFor="let abono of abonos">
-                                            <th scope="row">{{abono.id}}</th>
-                                            <td>{{abono.monto | currency}}</td>
-                                            <td>{{abono.fecha | date:'dd/MM/yyyy HH:mm'}}</td>
-                                            <td>{{abono.metodopago}}</td>
-                                            <td>
-                                                <div *ngFor="let detalle of abono.detallesMovimiento">
-                                                    #{{detalle.id || detalle.detalleMovimientoId}}
-                                                    - {{obtenerNombreProducto(detalle)}}
-                                                    - <span [class.text-danger]="abonoMenorQuePrecio(detalle)" [class.text-success]="abonoCompleto(detalle)">Precio: {{obtenerPrecioMovimiento(detalle) | currency}}</span>
-                                                    - Abono: {{(detalle.montoAplicado ?? detalle.AbonoDetalleMovimiento?.montoAplicado) | currency}}
-                                                </div>
-                                            </td>
-                                            <td>{{abono.comentario || '-'}}</td>
-                                            <td class="text-nowrap">
-                                                <button type="button" class="btn btn-warning btn-sm me-1"
-                                                    title="Editar abono" (click)="editarAbono(abono.id)">
-                                                    <i class="bi bi-pencil-square"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-danger btn-sm"
-                                                    title="Eliminar abono" (click)="eliminarAbono(abono.id)">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr *ngIf="!abonos.length">
-                                            <td colspan="7" class="text-center text-muted">No hay abonos registrados.</td>
-                                        </tr>
+                                    <tbody *ngFor="let abono of abonos">
+                                    <!-- Fila Principal con los datos del abono -->
+                                    <tr>
+                                        <th scope="row">{{abono.id}}</th>
+                                        <td>{{abono.monto | currency}}</td>
+                                        <td>{{abono.fecha | date:'dd/MM/yyyy HH:mm'}}</td>
+                                        <td>{{abono.metodopago}}</td>
+                                        <td class="text-nowrap">
+                                        <button type="button" class="btn btn-warning btn-sm me-1" title="Editar abono" (click)="editarAbono(abono.id)">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm" title="Eliminar abono" (click)="eliminarAbono(abono.id)">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-light">
+                                        <td colspan="6" class="ps-4">Comentario:{{abono.comentario || '-'}}</td>
+
+                                    </tr>
+                                    <!-- Fila Secundaria para el detalle del movimiento (ocupa todo el ancho) -->
+                                    <tr class="table-light">
+                                        <td colspan="6" class="ps-4">
+                                        <div class="fw-bold mb-1 small text-muted">Detalles del Movimiento:</div>
+                                        <div *ngFor="let detalle of abono.detallesMovimiento" class="mb-1 ms-2">
+                                            #{{detalle.id || detalle.detalleMovimientoId}} - 
+                                            {{obtenerNombreProducto(detalle)}} - 
+                                            <span [class.text-danger]="abonoMenorQuePrecio(detalle)" [class.text-success]="abonoCompleto(detalle)">
+                                            {{obtenerPrecioMovimiento(detalle) | currency}}
+                                            </span> - 
+                                            Abona: {{(detalle.montoAplicado ?? detalle.AbonoDetalleMovimiento?.montoAplicado) | currency}}
+                                        </div>
+                                        </td>
+                                    </tr>
                                     </tbody>
+
                                 </table>
                             </div>
                         </div>                        
