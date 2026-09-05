@@ -19,7 +19,6 @@ import { AbonoApi } from '../../services/abono-api';
 export class PersonaForm {
   accion: string = 'Agregar';
   persona: Persona;
-  totalVentas: number = 0;
   rutaRetorno = '/persona-list';
 
   detallesMovimientos: Array<DetalleMovimiento> = [];
@@ -108,14 +107,6 @@ export class PersonaForm {
       console.log(data);
       this.detallesMovimientos = data as Array<DetalleMovimiento>;
       this.cd.detectChanges();
-
-      //totalizar cuanto se vendio a la persona
-      let total = 0;
-      for (let i = 0; i < this.detallesMovimientos.length; i++) {
-        total += this.detallesMovimientos[i].precioventa;
-      }
-      this.totalVentas = total;
-      this.cd.detectChanges();
     });
   }
 
@@ -130,6 +121,24 @@ export class PersonaForm {
         this.toastService.show('No se pudieron cargar los abonos', 'error');
       }
     );
+  }
+
+  get totalAdeudado(): number {
+    return this.detallesMovimientos
+      .filter(detalle => detalle.estadopago === 'pendiente')
+      .reduce((total, detalle) => {
+        const subtotal = Number(detalle.subtotal);
+        const importe = Number.isFinite(subtotal) && subtotal > 0
+          ? subtotal
+          : Number(detalle.cantidad || 0) * Number(detalle.precioventa || 0);
+        const adelantos = this.abonos.reduce((totalAbonos, abono) =>
+          totalAbonos + abono.detallesMovimiento
+            .filter(aplicacion => (aplicacion.id || aplicacion.detalleMovimientoId) === detalle.id)
+            .reduce((totalAplicado, aplicacion) =>
+              totalAplicado + Number(aplicacion.montoAplicado || aplicacion.AbonoDetalleMovimiento?.montoAplicado || 0), 0), 0);
+
+        return total + Math.max(importe - adelantos, 0);
+      }, 0);
   }
 
   obtenerNombreProducto(detalle: Abono['detallesMovimiento'][number]): string {
