@@ -47,7 +47,7 @@ export class ProductoClienteList {
           return;
         }
 
-        this.productos = data;
+        this.productos = data.filter((producto: any) => Number(producto.stock) >= 1);
         this.cargando = false;
         this.cd.detectChanges();
       },

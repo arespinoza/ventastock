@@ -2,7 +2,7 @@
     <div class="text-center mb-4">
       <h1>Panel de Control</h1>
     </div>
-  
+
     <div class="row text-center">
       <!-- Tarjeta de Productos -->
       <div class="col-4 mb-4">
@@ -55,6 +55,17 @@
             <i class="bi bi-grid-3x3-gap-fill display-3 text-success"></i>
             <h3 class="card-title mt-3">Catálogo</h3>
             <p class="card-text">Consultar productos, precios y stock disponible.</p>
+          </a>
+        </div>
+      </div>
+
+      <!-- Tarjeta de Estadísticas -->
+      <div class="col-4 mb-4">
+        <div class="card h-100 shadow-hover" (click)="navigateTo('estadistica')">
+          <a class="card-body text-decoration-none">
+            <i class="bi bi-bar-chart-line-fill display-3 text-danger"></i>
+            <h3 class="card-title mt-3">Estadística</h3>
+            <p class="card-text">Consultar las ventas mensuales pagadas y pendientes.</p>
           </a>
         </div>
       </div>

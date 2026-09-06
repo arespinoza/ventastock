@@ -16,8 +16,8 @@
                     <form #personaForm="ngForm">
                         <div class="alert alert-warning d-flex justify-content-between align-items-center gap-3">
                             <div>
-                                <div class="small text-uppercase fw-bold">Saldo pendiente</div>
-                                <div class="fs-3 fw-bold">{{totalAdeudado | currency}}</div>
+                                <div class="small text-uppercase fw-bold">Saldo pendiente: {{totalAdeudado | currency}}</div>
+                                <div class="fs-3 fw-bold"></div>
                             </div>
                         </div>
 
@@ -84,7 +84,7 @@
                                 <h4 class="mb-0">Ventas realizados</h4>
                                 <button type="button" class="btn btn-primary mb-3 btn-sm"
                                     (click)="redirigir('/detalle-movimiento-form/0?returnUrl=/persona-form/' + persona.id + '&personaId=' + persona.id)">
-                                    <i class="bi bi-plus-circle"></i> Agregar Detalle Movimiento
+                                    <i class="bi bi-plus-circle"></i> Agregar Venta
                                 </button>
                             </div>
 
@@ -114,7 +114,7 @@
                                             </td>
                                             <td>{{dm.cantidad}}</td>
                                             <td>{{dm.precioventa | currency}}</td>
-                                            <td>{{dm.fecha | date:'yyyy-MM-dd HH:mm'}}</td>
+                                            <td>{{dm.fecha | date:'dd/MM/yy HH:mm'}}</td>
 
                             
                                             <td>
@@ -160,7 +160,7 @@
                                     <tr class="mt-0">
                                         <th scope="row">{{abono.id}}</th>
                                         <td>{{abono.monto | currency}}</td>
-                                        <td>{{abono.fecha | date:'dd/MM/yyyy HH:mm'}}</td>
+                                        <td>{{abono.fecha | date:'dd/MM/yy HH:mm'}}</td>
                                         <td>{{abono.metodopago}}</td>
                                         <td class="text-nowrap">
                                         <button type="button" class="btn btn-warning btn-sm me-1" title="Editar abono" (click)="editarAbono(abono.id)">

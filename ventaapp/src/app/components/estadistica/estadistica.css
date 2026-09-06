@@ -1,0 +1,21 @@
+.sales-summary {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+}
+
+.sales-table {
+  margin-bottom: 0;
+  background: #fff;
+}
+
+@media (max-width: 767.98px) {
+  .sales-summary {
+    padding: 0.75rem;
+  }
+
+  .sales-table {
+    min-width: 760px;
+  }
+}

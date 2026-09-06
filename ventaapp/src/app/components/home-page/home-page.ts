@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home-page',
@@ -8,9 +8,7 @@ import { Router, RouterLink } from '@angular/router';
   styleUrl: './home-page.css',
 })
 export class HomePage {
-  constructor(private router: Router) {
-    
-  }
+  constructor(private router: Router) {}
 
   navigateTo(path: string) {
     this.router.navigate([path]);
