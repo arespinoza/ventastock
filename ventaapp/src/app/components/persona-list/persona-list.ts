@@ -13,6 +13,8 @@ import { CommonModule } from '@angular/common';
 })
 export class PersonaList {
   personas: Array<Persona> = [];
+  todasLasPersonas: Array<Persona> = [];
+  textoBusqueda = '';
 
   constructor(private personaApi: PersonaApi,
               private router: Router,
@@ -23,9 +25,18 @@ export class PersonaList {
 
   getPersonas() {
     this.personaApi.getPersonas().subscribe((data) => {
-      this.personas = data;
+      this.todasLasPersonas = data;
+      this.filtrarPersonas();
       this.cd.detectChanges();
     });
+  }
+
+  filtrarPersonas() {
+    const texto = this.textoBusqueda.trim().toLocaleLowerCase();
+
+    this.personas = this.todasLasPersonas.filter((persona) =>
+      `${persona.apellido} ${persona.nombres}`.toLocaleLowerCase().includes(texto)
+    );
   }
 
 

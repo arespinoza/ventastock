@@ -27,16 +27,16 @@
   </div>
 
   <div *ngIf="resumenMensual.length" class="table-responsive sales-summary">
-    <table class="table table-sm table-hover align-middle sales-table">
+    <table class="table table-sm small table-hover align-middle sales-table">
       <thead class="table-dark">
         <tr>
           <th scope="col">Mes</th>
-          <th scope="col">Ventas</th>
-          <th scope="col" class="text-success">Pagadas</th>
-          <th scope="col" class="text-danger">Pendientes</th>
-          <th scope="col" class="text-end">Total vendido</th>
-          <th scope="col" class="text-end">Cobrado</th>
-          <th scope="col" class="text-end">Por cobrar</th>
+          <th scope="col">Vtas</th>
+          <th scope="col" class="text-success">Pag.</th>
+          <th scope="col" class="text-danger">Pen</th>
+          <th scope="col" class="text-end">T.Vendido</th>
+          <th scope="col" class="text-end">T.Cobrado</th>
+          <th scope="col" class="text-end">T.PorCobrar</th>
         </tr>
       </thead>
       <tbody>
@@ -49,7 +49,53 @@
           <td class="text-end text-success">{{ resumen.importePagado | currency }}</td>
           <td class="text-end text-danger">{{ resumen.importePendiente | currency }}</td>
         </tr>
+        <tr class="table-secondary fw-bold">
+          <th scope="row">{{ totalGeneral.mes }}</th>
+          <td>{{ totalGeneral.ventas }}</td>
+          <td><span class="badge text-bg-success">{{ totalGeneral.pagadas }}</span></td>
+          <td>
+            <button type="button" class="badge text-bg-danger border-0" title="Ver detalles pendientes"
+              (click)="alternarDetallesPendientes()">
+              {{ totalGeneral.pendientes }}
+            </button>
+          </td>
+          <td class="text-end">{{ totalGeneral.importeTotal | currency }}</td>
+          <td class="text-end text-success">{{ totalGeneral.importePagado | currency }}</td>
+          <td class="text-end text-danger">{{ totalGeneral.importePendiente | currency }}</td>
+        </tr>
       </tbody>
     </table>
+
+  </div>
+
+  <div *ngIf="mostrarDetallesPendientes" class="pending-modal" role="dialog" aria-modal="true"
+    aria-labelledby="pending-modal-title" (click)="alternarDetallesPendientes()">
+    <div class="pending-modal-dialog" (click)="$event.stopPropagation()">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 id="pending-modal-title" class="h5 mb-0">Detalle de ventas pendientes</h2>
+        <button type="button" class="btn-close" aria-label="Cerrar" (click)="alternarDetallesPendientes()"></button>
+      </div>
+      <div *ngIf="!detallesPendientes.length" class="alert alert-light border mb-0">
+        No hay detalles pendientes.
+      </div>
+      <div *ngIf="detallesPendientes.length" class="table-responsive">
+        <table class="table table-sm small table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Cliente</th>
+              <th>Producto</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let detalle of detallesPendientes">
+              <td>{{ detalle.persona?.apellido }} {{ detalle.persona?.nombres }}</td>
+              <td>{{ detalle.cantidad }} {{ detalle.producto?.nombre }} - {{ obtenerImporte(detalle) | currency }}</td>
+              <td>{{ detalle.fecha | date:'dd/MM/yyyy' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>

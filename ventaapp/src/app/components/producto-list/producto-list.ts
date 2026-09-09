@@ -89,11 +89,7 @@ export class ProductoList {
 
   async compartirPorWhatsApp(producto: any) {
     const informacionProducto = [
-      `Producto: ${producto.nombre}`,
-      `ID: ${producto.id}`,
-      `Estado: ${producto.estado ? 'Vigente' : 'No vigente'}`,
-      `Stock: ${producto.stock}`,
-      `Precio de venta: $${producto.precioventa}`
+      `Producto: ${producto.nombre} $${Number(producto.precioventa).toFixed(0)}`
     ].join('\n');
 
     if (producto.foto && navigator.share && navigator.canShare) {

@@ -24,8 +24,32 @@ interface ResumenMensual {
 })
 export class Estadistica {
   resumenMensual: ResumenMensual[] = [];
+  detallesPendientes: DetalleMovimiento[] = [];
+  mostrarDetallesPendientes = false;
   cargandoResumen = true;
   mensajeError = '';
+
+  get totalGeneral(): ResumenMensual {
+    return this.resumenMensual.reduce((total, resumen) => ({
+      clave: '',
+      mes: 'Total general',
+      ventas: total.ventas + resumen.ventas,
+      importeTotal: total.importeTotal + resumen.importeTotal,
+      pagadas: total.pagadas + resumen.pagadas,
+      importePagado: total.importePagado + resumen.importePagado,
+      pendientes: total.pendientes + resumen.pendientes,
+      importePendiente: total.importePendiente + resumen.importePendiente
+    }), {
+      clave: '',
+      mes: 'Total general',
+      ventas: 0,
+      importeTotal: 0,
+      pagadas: 0,
+      importePagado: 0,
+      pendientes: 0,
+      importePendiente: 0
+    });
+  }
 
   constructor(
     private router: Router,
@@ -38,7 +62,11 @@ export class Estadistica {
   private cargarResumenMensual() {
     this.detalleMovimientoApi.getDetallesMovimiento().subscribe({
       next: data => {
-        this.resumenMensual = this.agruparVentas(Array.isArray(data) ? data as DetalleMovimiento[] : []);
+        const detalles = Array.isArray(data) ? data as DetalleMovimiento[] : [];
+        this.detallesPendientes = detalles
+          .filter(detalle => detalle.tipo === 'venta' && detalle.estadopago === 'pendiente')
+          .sort((a, b) => this.obtenerNombrePersona(a).localeCompare(this.obtenerNombrePersona(b), 'es'));
+        this.resumenMensual = this.agruparVentas(detalles);
         this.cargandoResumen = false;
         this.cd.detectChanges();
       },
@@ -93,7 +121,7 @@ export class Estadistica {
     return Array.from(resumen.values()).sort((a, b) => b.clave.localeCompare(a.clave));
   }
 
-  private obtenerImporte(detalle: DetalleMovimiento): number {
+  obtenerImporte(detalle: DetalleMovimiento): number {
     const subtotal = Number(detalle.subtotal);
     if (Number.isFinite(subtotal) && subtotal >= 0) {
       return subtotal;
@@ -101,8 +129,17 @@ export class Estadistica {
     return Number(detalle.cantidad || 0) * Number(detalle.precioventa || 0);
   }
 
+  private obtenerNombrePersona(detalle: DetalleMovimiento): string {
+    return `${detalle.persona?.apellido || ''} ${detalle.persona?.nombres || ''}`.trim();
+  }
+
+  alternarDetallesPendientes() {
+    this.mostrarDetallesPendientes = !this.mostrarDetallesPendientes;
+  }
+
   private formatearMes(fecha: Date): string {
-    return new Intl.DateTimeFormat('es', { month: 'long', year: 'numeric' }).format(fecha);
+    const mes = new Intl.DateTimeFormat('es', { month: 'long' }).format(fecha);
+    return `${mes.slice(0, 3)} - ${fecha.getFullYear()}`;
   }
 
   volverAlInicio() {
