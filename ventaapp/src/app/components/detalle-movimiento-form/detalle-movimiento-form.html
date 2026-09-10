@@ -15,33 +15,36 @@
 
           <!-- Fila para ID y Fecha -->
           <div class="row mb-3">
-            <div class="col-md-4">
-              <div class="btn-group" role="group" aria-label="Tipo de Movimiento">
-                <input type="radio" class="btn-check" name="tipo"
-                  id="tipoCompra" value="compra" autocomplete="off"
-                  [(ngModel)]="detalleMovimiento.tipo" (ngModelChange)="calcularSubtotal()">
-                <label class="btn btn-outline-primary" for="tipoCompra">Compra</label>
-                
-                <input type="radio" class="btn-check" name="tipo"
-                  id="tipoVenta" value="venta" autocomplete="off"
-                  [(ngModel)]="detalleMovimiento.tipo" (ngModelChange)="calcularSubtotal()">
-                <label class="btn btn-outline-primary" for="tipoVenta">Venta</label>
-              </div>
-            </div>  
-            
-            <div class="col-md-4 mt-1">
-              <div class="btn-group" role="group" aria-label="Estado Pago">
-                <input type="radio" class="btn-check" name="estadopago"
-                  id="estadopendiente" value="pendiente" autocomplete="off"
-                  [(ngModel)]="detalleMovimiento.estadopago">
-                <label class="btn btn-outline-success" for="estadopendiente">Pendiente</label>
-                
-                <input type="radio" class="btn-check" name="estadopago"
-                  id="estadopagado" value="pagado" autocomplete="off"
-                  [(ngModel)]="detalleMovimiento.estadopago">
-                <label class="btn btn-outline-success" for="estadopagado">Pagado</label>
-              </div>
-            </div>             
+            <div class="row">
+              <div class="col-6">
+                <div class="btn-group" role="group" aria-label="Tipo de Movimiento">
+                  <input type="radio" class="btn-check" name="tipo"
+                    id="tipoCompra" value="compra" autocomplete="off"
+                    [(ngModel)]="detalleMovimiento.tipo" (ngModelChange)="calcularSubtotal()">
+                  <label class="btn btn-outline-primary" for="tipoCompra">Compra</label>
+                  
+                  <input type="radio" class="btn-check" name="tipo"
+                    id="tipoVenta" value="venta" autocomplete="off"
+                    [(ngModel)]="detalleMovimiento.tipo" (ngModelChange)="calcularSubtotal()">
+                  <label class="btn btn-outline-primary" for="tipoVenta">Venta</label>
+                </div>
+              </div>  
+              
+              <div class="col-6">
+                <div class="btn-group" role="group" aria-label="Estado Pago">
+                  <input type="radio" class="btn-check" name="estadopago"
+                    id="estadopendiente" value="pendiente" autocomplete="off"
+                    [(ngModel)]="detalleMovimiento.estadopago">
+                  <label class="btn btn-outline-success" for="estadopendiente">Pendiente</label>
+                  
+                  <input type="radio" class="btn-check" name="estadopago"
+                    id="estadopagado" value="pagado" autocomplete="off"
+                    [(ngModel)]="detalleMovimiento.estadopago">
+                  <label class="btn btn-outline-success" for="estadopagado">Pagado</label>
+                </div>
+              </div>  
+            </div>
+           
 
 
           </div>

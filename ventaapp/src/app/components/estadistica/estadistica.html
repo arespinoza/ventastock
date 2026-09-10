@@ -27,41 +27,35 @@
   </div>
 
   <div *ngIf="resumenMensual.length" class="table-responsive sales-summary">
-    <table class="table table-sm small table-hover align-middle sales-table">
+    <table class="table table-sm small table-hover align-middle">
       <thead class="table-dark">
         <tr>
-          <th scope="col">Mes</th>
-          <th scope="col">Vtas</th>
-          <th scope="col" class="text-success">Pag.</th>
-          <th scope="col" class="text-danger">Pen</th>
-          <th scope="col" class="text-end">T.Vendido</th>
-          <th scope="col" class="text-end">T.Cobrado</th>
-          <th scope="col" class="text-end">T.PorCobrar</th>
+          <th>Mes</th>
+          <th>Vtas</th>
+          <th class="text-success">Pag.</th>
+          <th class="text-danger">Pen</th>
+
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let resumen of resumenMensual">
           <th scope="row" class="text-capitalize">{{ resumen.mes }}</th>
-          <td>{{ resumen.ventas }}</td>
-          <td><span class="badge text-bg-success">{{ resumen.pagadas }}</span></td>
-          <td><span class="badge text-bg-danger">{{ resumen.pendientes }}</span></td>
-          <td class="text-end">{{ resumen.importeTotal | currency }}</td>
-          <td class="text-end text-success">{{ resumen.importePagado | currency }}</td>
-          <td class="text-end text-danger">{{ resumen.importePendiente | currency }}</td>
+          <td scope="row"><span class="badge text-bg-secondary">{{ resumen.ventas }}</span> <br>{{ resumen.importeTotal | currency }}</td>
+          <td scope="row"><span class="badge text-bg-success">{{ resumen.pagadas }}</span> <br>{{ resumen.importePagado | currency }}</td>
+          <td scope="row"><span class="badge text-bg-danger">{{ resumen.pendientes }}</span><br>{{ resumen.importePendiente | currency }}</td>
+
         </tr>
         <tr class="table-secondary fw-bold">
           <th scope="row">{{ totalGeneral.mes }}</th>
-          <td>{{ totalGeneral.ventas }}</td>
-          <td><span class="badge text-bg-success">{{ totalGeneral.pagadas }}</span></td>
+          <td><span class="badge text-bg-secondary">{{ totalGeneral.ventas }} <br> {{ totalGeneral.importeTotal | currency }}</span></td>
+          <td><span class="badge text-bg-success">{{ totalGeneral.pagadas }} <br>{{ totalGeneral.importePagado | currency }}</span></td>
           <td>
             <button type="button" class="badge text-bg-danger border-0" title="Ver detalles pendientes"
               (click)="alternarDetallesPendientes()">
-              {{ totalGeneral.pendientes }}
+              {{ totalGeneral.pendientes }} <br>{{ totalGeneral.importePendiente | currency }}
             </button>
           </td>
-          <td class="text-end">{{ totalGeneral.importeTotal | currency }}</td>
-          <td class="text-end text-success">{{ totalGeneral.importePagado | currency }}</td>
-          <td class="text-end text-danger">{{ totalGeneral.importePendiente | currency }}</td>
+
         </tr>
       </tbody>
     </table>

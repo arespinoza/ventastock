@@ -5,20 +5,23 @@
             <li class="breadcrumb-item active" aria-current="page">Personas</li>
         </ol>
     </nav>
-    <h2>Gestión de Personas</h2>
-    <p>A continuación se muestra la lista de Personas registradas.</p>
 
     <!-- Botón para agregar un nuevo persona -->
     <div class="mb-3">
-        <button class="btn btn-primary" (click)="navigateTo('persona-form/0')">
-            <i class="bi bi-plus-circle"></i> Agregar Persona
-        </button>
-    </div>
 
-    <div class="mb-3">
-        <input id="buscadorPersonas" type="search" class="form-control  bg-light text-dark"
-            placeholder="Ingrese apellido o nombre" [(ngModel)]="textoBusqueda"
-            (ngModelChange)="filtrarPersonas()" >
+    </div>
+    <div class="row">
+        <div class="col-8 b-3">
+            <input id="buscadorPersonas" type="search" class="form-control  bg-light text-dark"
+                placeholder="Ingrese apellido o nombre" [(ngModel)]="textoBusqueda"
+                (ngModelChange)="filtrarPersonas()" >
+                
+        </div>
+        <div class="col-4 mb-3">
+            <button class="btn btn-primary" (click)="navigateTo('persona-form/0')">
+                <i class="bi bi-plus-circle"></i> Agregar
+            </button>
+        </div>
     </div>
 
     <!-- Tabla para listar las personas -->
