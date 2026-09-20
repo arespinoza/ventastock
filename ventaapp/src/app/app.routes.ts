@@ -11,6 +11,7 @@ import { Login } from './components/login/login';
 import { AbonoList } from './components/abono-list/abono-list';
 import { AbonoForm } from './components/abono-form/abono-form';
 import { Estadistica } from './components/estadistica/estadistica';
+import { Caja } from './components/caja/caja';
 import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
@@ -19,6 +20,7 @@ export const routes: Routes = [
     { path: 'catalogo', component: ProductoClienteList },
     { path: 'home', component: HomePage, canActivate: [adminGuard] },
     { path: 'estadistica', component: Estadistica, canActivate: [adminGuard] },
+    { path: 'caja', component: Caja, canActivate: [adminGuard] },
     { path: 'producto-list', component: ProductoList, canActivate: [adminGuard] },
     { path: 'producto-form/:id', component: ProductoForm, canActivate: [adminGuard] },
     { path: 'persona-list', component:PersonaList, canActivate: [adminGuard]},

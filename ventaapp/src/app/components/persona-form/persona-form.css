@@ -1,0 +1,28 @@
+.input-group-text {
+	width: 5.9rem;
+	padding-left: 0.45rem;
+	padding-right: 0.45rem;
+	white-space: nowrap;
+	background-color: #dee2e6;
+	color: #343a40;
+	font-weight: 600;
+	border-right: 2px solid #adb5bd;
+}
+
+.table tbody thead {
+	font-size: 0.90rem;
+}
+
+.decimal-subindice {
+	font-size: 0.65em;
+	vertical-align: super;
+	line-height: 0;
+}
+
+@media (max-width: 575.98px) {
+	.table-responsive {
+		width: calc(100% + 2rem);
+		margin-left: -1rem;
+		margin-right: -1rem;
+	}
+}

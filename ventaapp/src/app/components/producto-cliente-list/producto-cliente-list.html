@@ -24,9 +24,9 @@
                 </button>
                 <button type="button" class="btn btn-sm"
                     *ngFor="let categoria of categorias"
-                    [class.btn-success]="categoriaFiltro === categoria.nombre"
-                    [class.btn-outline-success]="categoriaFiltro !== categoria.nombre"
-                    [class.active]="categoriaFiltro === categoria.nombre"
+                    [class.btn-success]="esCategoriaSeleccionada(categoria.nombre)"
+                    [class.btn-outline-success]="!esCategoriaSeleccionada(categoria.nombre)"
+                    [class.active]="esCategoriaSeleccionada(categoria.nombre)"
                     (click)="seleccionarCategoria(categoria.nombre)">
                     {{categoria.nombre}}
                 </button>

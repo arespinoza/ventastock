@@ -18,9 +18,7 @@ export class ProductoList {
 
   constructor(private productoApi: ProductoApi,
               private router: Router,
-              private cd: ChangeDetectorRef) {
-                this.getProductos();
-              }
+              private cd: ChangeDetectorRef) { }
 
   getProductos(nombre = this.nombreFiltro) {
     const solicitudActual = ++this.solicitudProductos;

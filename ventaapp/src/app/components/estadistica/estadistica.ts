@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { DetalleMovimiento } from '../../models/detalle-movimiento';
 import { DetalleMovimientoApi } from '../../services/detalle-movimiento-api';
+import { ProductoApi } from '../../services/producto-api';
 
 interface ResumenMensual {
   clave: string;
@@ -14,6 +15,13 @@ interface ResumenMensual {
   importePagado: number;
   pendientes: number;
   importePendiente: number;
+}
+
+interface ValoracionProductos {
+  productos: number;
+  unidades: number;
+  valorCompra: number;
+  valorVenta: number;
 }
 
 @Component({
@@ -28,6 +36,14 @@ export class Estadistica {
   mostrarDetallesPendientes = false;
   cargandoResumen = true;
   mensajeError = '';
+  valoracionProductos: ValoracionProductos = {
+    productos: 0,
+    unidades: 0,
+    valorCompra: 0,
+    valorVenta: 0
+  };
+  cargandoValoracion = true;
+  mensajeErrorValoracion = '';
 
   get totalGeneral(): ResumenMensual {
     return this.resumenMensual.reduce((total, resumen) => ({
@@ -54,9 +70,48 @@ export class Estadistica {
   constructor(
     private router: Router,
     private detalleMovimientoApi: DetalleMovimientoApi,
+    private productoApi: ProductoApi,
     private cd: ChangeDetectorRef
   ) {
     this.cargarResumenMensual();
+    this.cargarValoracionProductos();
+  }
+
+  private cargarValoracionProductos() {
+    this.productoApi.getProductos().subscribe({
+      next: data => {
+        const productosActivos = (Array.isArray(data) ? data : [])
+          .filter(producto =>
+            (producto.estado === true || producto.estado === 1 || producto.estado === '1')
+            && Number(producto.stock) > 0
+          );
+
+        this.valoracionProductos = productosActivos.reduce((total, producto) => {
+          const stock = Number(producto.stock) || 0;
+          const precioCompra = Number(producto.preciocompra) || 0;
+          const precioVenta = Number(producto.precioventa) || 0;
+
+          return {
+            productos: total.productos + 1,
+            unidades: total.unidades + stock,
+            valorCompra: total.valorCompra + stock * precioCompra,
+            valorVenta: total.valorVenta + stock * precioVenta
+          };
+        }, {
+          productos: 0,
+          unidades: 0,
+          valorCompra: 0,
+          valorVenta: 0
+        });
+        this.cargandoValoracion = false;
+        this.cd.detectChanges();
+      },
+      error: () => {
+        this.cargandoValoracion = false;
+        this.mensajeErrorValoracion = 'No se pudo cargar la valoración de productos.';
+        this.cd.detectChanges();
+      }
+    });
   }
 
   private cargarResumenMensual() {

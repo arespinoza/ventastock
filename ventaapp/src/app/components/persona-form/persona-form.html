@@ -1,4 +1,4 @@
-<div class="container mt-5">
+<div class="container-fluid mt-5 px-0">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a class="text-decoration-none text-reset" style="cursor: pointer;" href="#" (click)="redirigir('home')">Home</a></li>
@@ -6,10 +6,11 @@
             <li class="breadcrumb-item active" aria-current="page">Formulario</li>
         </ol>
     </nav>
-    <div class="row justify-content-center">
-        <div class="col-md-10">
+    <div class="row justify-content-center mx-0">
+        <div class="col-12 px-0">
             <div class="card shadow-sm">
-                    <div class="row card-header bg-primary text-white">
+                <div class="card-header bg-primary text-white">
+                    <div class="row">
                         <div class="col-6">
                             <h5>Gestion Persona</h5>
                         </div>
@@ -18,27 +19,33 @@
                         </div> 
                     </div>
 
+                </div>
+
 
                 <div class="card-body bg-secondary bg-opacity-25">
                     <form #personaForm="ngForm">
-
-
                         <!-- Campo Apellido -->
                         <div class="mb-3">
-                            <label for="apellido" class="form-label">Apellido</label>
-                            <input type="text" class="form-control form-control-sm" id="apellido" name="apellido" placeholder="Ej: Perez" [(ngModel)]="persona.apellido" required>
+                            <div class="input-group input-group-sm">
+                                <label for="apellido" class="input-group-text">Apellido</label>
+                                <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Ej: Perez" [(ngModel)]="persona.apellido" required>
+                            </div>
                         </div>
 
                         <!-- Campo Nombres -->
                         <div class="mb-3">
-                            <label for="nombres" class="form-label">Nombres</label>
-                            <input type="text" class="form-control form-control-sm" id="nombres" name="nombres" placeholder="Ej: Juan Carlos" [(ngModel)]="persona.nombres" required>
+                            <div class="input-group input-group-sm">
+                                <label for="nombres" class="input-group-text">Nombres</label>
+                                <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Ej: Juan Carlos" [(ngModel)]="persona.nombres" required>
+                            </div>
                         </div>
 
                         <!-- Campo Referencia -->
                         <div class="mb-3">
-                            <label for="referencia" class="form-label">Referencia</label>
-                            <input type="text" class="form-control form-control-sm" id="referencia" name="referencia" placeholder="Ej: Cliente frecuente" [(ngModel)]="persona.referencia">
+                            <div class="input-group input-group-sm">
+                                <label for="referencia" class="input-group-text">Referencia</label>
+                                <input type="text" class="form-control" id="referencia" name="referencia" placeholder="Ej: Cliente frecuente" [(ngModel)]="persona.referencia">
+                            </div>
                         </div>
 
                         <!-- Toggle para campos opcionales -->
@@ -69,21 +76,24 @@
                         </div>
 
                         <!-- Botones -->
-                        <div class="d-flex gap-2">
-                            <button *ngIf="accion == 'agregar'" type="button" class="btn btn-success" (click)="agregarPersona()">
+                        <div class="d-flex gap-1">
+                            <button *ngIf="accion == 'agregar'" type="button" class="btn btn-sm btn-success" (click)="agregarPersona()">
                                 <i class="bi bi-plus-circle"></i> Agregar
                             </button>
-                            <button *ngIf="accion == 'modificar'" type="button" class="btn btn-warning" (click)="modificarPersona()">
+                            <button *ngIf="accion == 'modificar'" type="button" class="btn btn-sm btn-warning" (click)="modificarPersona()">
                                 <i class="bi bi-pencil-square"></i> Modificar
                             </button>
-                            <button type="button" class="btn btn-secondary" (click)="salir()">
+                            <button type="button" class="btn btn-sm btn-primary" title="Exportar información del cliente"
+                                (click)="exportarPdf()">
+                                <i class="bi bi-file-earmark-pdf"></i> Exportar
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary" (click)="salir()">
                                 <i class="bi bi-box-arrow-right"></i> Salir
                             </button>
                       
 
 
                         </div>
-                        <br>
                         <div class="mb-3" *ngIf="accion=='modificar'">
 
                             <div class="d-flex justify-content-between align-items-center mt-4 mb-2 gap-2">
@@ -102,7 +112,7 @@
                                             <th scope="col">ID</th>
                                             <th scope="col">Producto</th>
                                             <th scope="col">Cn</th>
-                                            <th scope="col">$$Venta</th>
+                                            <th scope="col">$Venta</th>
                                             <th scope="col">Fecha</th>
                                             <th scope="col">Acciones</th>
                                         </tr>
@@ -116,10 +126,14 @@
                                                 <span [ngClass]="{
                                                     'text-danger fw-bold': dm.estadopago === 'pendiente',
                                                     'text-success fw-bold': dm.estadopago === 'pagado'
-                                                }">[{{dm.estadopago}}]</span>
+                                                }">[{{dm.estadopago?.substring(0, 3)}}]</span>
                                             </td>
                                             <td>{{dm.cantidad}}</td>
-                                            <td>{{dm.precioventa | currency}}</td>
+                                            <td>
+                                                <ng-container *ngIf="formatearImporteTabla(dm.precioventa) as importe">
+                                                    {{importe.principal}}<span class="decimal-subindice">,{{importe.decimales}}</span>
+                                                </ng-container>
+                                            </td>
                                             <td>{{dm.fecha | date:'dd/MM/yy HH:mm'}}</td>
 
                             
@@ -158,14 +172,18 @@
                                             <th scope="col">Monto</th>
                                             <th scope="col">Fecha</th>
                                             <th scope="col">Pago</th>
-                                            <th scope="col">Acciones</th>
+                                            <th scope="col">Accion</th>
                                         </tr>
                                     </thead>
                                     <tbody *ngFor="let abono of abonos">
                                     <!-- Fila Principal con los datos del abono -->
-                                    <tr class="mt-0">
+                                    <tr class="mt-0 p-0">
                                         <th scope="row">{{abono.id}}</th>
-                                        <td>{{abono.monto | currency}}</td>
+                                        <td>
+                                            <ng-container *ngIf="formatearImporteTabla(abono.monto) as importe">
+                                                {{importe.principal}}<span class="decimal-subindice">,{{importe.decimales}}</span>
+                                            </ng-container>
+                                        </td>
                                         <td>{{abono.fecha | date:'dd/MM/yy HH:mm'}}</td>
                                         <td>{{abono.metodopago}}</td>
                                         <td class="text-nowrap">
@@ -186,9 +204,14 @@
                                             #{{detalle.id || detalle.detalleMovimientoId}} - 
                                             {{obtenerNombreProducto(detalle)}} - 
                                             <span [class.text-danger]="abonoMenorQuePrecio(detalle)" [class.text-success]="abonoCompleto(detalle)">
-                                            {{obtenerPrecioMovimiento(detalle) | currency}}
+                                            <ng-container *ngIf="formatearImporteTabla(obtenerPrecioMovimiento(detalle)) as importe">
+                                                {{importe.principal}}<span class="decimal-subindice">,{{importe.decimales}}</span>
+                                            </ng-container>
                                             </span> - 
-                                            Abona: {{(detalle.montoAplicado ?? detalle.AbonoDetalleMovimiento?.montoAplicado) | currency}}
+                                            Abona:
+                                            <ng-container *ngIf="formatearImporteTabla(detalle.montoAplicado ?? detalle.AbonoDetalleMovimiento?.montoAplicado) as importe">
+                                                {{importe.principal}}<span class="decimal-subindice">,{{importe.decimales}}</span>
+                                            </ng-container>
                                         </div>
                                         </td>
                                     </tr>

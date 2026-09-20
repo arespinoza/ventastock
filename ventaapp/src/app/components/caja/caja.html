@@ -1,0 +1,97 @@
+<div class="container mt-4 caja-page">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a class="text-decoration-none text-reset" role="button" (click)="volverAlInicio()">Home</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Caja</li>
+    </ol>
+  </nav>
+
+  <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap mb-3">
+    <div>
+      <h1 class="h2 mb-1">Caja</h1>
+      <p class="text-muted mb-0">Ventas y abonos realizados en el período seleccionado.</p>
+    </div>
+    <button type="button" class="btn btn-outline-secondary" (click)="volverAlInicio()">
+      <i class="bi bi-arrow-left"></i> Volver al panel
+    </button>
+  </div>
+
+  <div class="btn-group flex-wrap mb-4" role="group" aria-label="Período de caja">
+    <button *ngFor="let periodo of periodos" type="button" class="btn"
+      [class.btn-primary]="periodoSeleccionado === periodo.clave"
+      [class.btn-outline-primary]="periodoSeleccionado !== periodo.clave"
+      (click)="cambiarPeriodo(periodo.clave)">
+      {{ periodo.etiqueta }}
+    </button>
+  </div>
+
+  <div *ngIf="cargando" class="text-muted py-3">Cargando movimientos...</div>
+  <div *ngIf="!cargando && mensajeError" class="alert alert-danger" role="alert">{{ mensajeError }}</div>
+
+  <ng-container *ngIf="!cargando && !mensajeError">
+    <section class="mb-4" aria-labelledby="ventas-title">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2 id="ventas-title" class="h4 mb-0">Ventas</h2>
+        <strong class="text-success">{{ totalVentas | currency }}</strong>
+      </div>
+      <div *ngIf="!ventas.length" class="alert alert-light border">No hay ventas en este período.</div>
+      <div *ngIf="ventas.length" class="table-responsive">
+        <table class="table table-sm table-striped table-hover align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>Fecha</th>
+              <th>Cliente</th>
+              <th>Producto</th>
+              <th>Cant.</th>
+              <th>Importe</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let venta of ventas">
+              <td>{{ venta.fecha | date:'dd/MM/yy HH:mm' }}</td>
+              <td>{{ obtenerNombrePersona(venta) }}</td>
+              <td>{{ venta.producto?.nombre || 'Sin producto' }}</td>
+              <td>{{ venta.cantidad }}</td>
+              <td>{{ obtenerImporteVenta(venta) | currency }}</td>
+              <td>
+                <span class="badge" [class.text-bg-success]="venta.estadopago === 'pagado'"
+                  [class.text-bg-warning]="venta.estadopago !== 'pagado'">
+                  {{ venta.estadopago || '-' }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="abonos-title">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2 id="abonos-title" class="h4 mb-0">Abonos</h2>
+        <strong class="text-success">{{ totalAbonos | currency }}</strong>
+      </div>
+      <div *ngIf="!abonos.length" class="alert alert-light border">No hay abonos en este período.</div>
+      <div *ngIf="abonos.length" class="table-responsive">
+        <table class="table table-sm table-striped table-hover align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>Fecha</th>
+              <th>Cliente</th>
+              <th>Monto</th>
+              <th>Pago</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let abono of abonos">
+              <td>{{ abono.fecha | date:'dd/MM/yy HH:mm' }}</td>
+              <td>{{ obtenerNombrePersona(abono) }}</td>
+              <td>{{ abono.monto | currency }}</td>
+              <td>{{ abono.metodopago || '-' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </ng-container>
+</div>

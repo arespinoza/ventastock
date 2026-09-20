@@ -14,7 +14,7 @@ export class ProductoClienteList {
   productos: Array<any> = [];
   categorias: Array<any> = [];
   nombreFiltro = '';
-  categoriaFiltro = '';
+  categoriaFiltro = 'libreria';
   cargando = true;
   error = false;
   fotoAmpliada: string | null = null;
@@ -72,6 +72,14 @@ export class ProductoClienteList {
   seleccionarCategoria(categoria: string) {
     this.categoriaFiltro = categoria;
     this.buscarProductos();
+  }
+
+  esCategoriaSeleccionada(categoria: string): boolean {
+    return this.normalizarCategoria(this.categoriaFiltro) === this.normalizarCategoria(categoria);
+  }
+
+  private normalizarCategoria(categoria: string): string {
+    return categoria.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
 
   obtenerMiniatura(foto: string): string {

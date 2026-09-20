@@ -10,8 +10,7 @@
 
   <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap mb-3">
     <div>
-      <h1 class="h2 mb-1">Estadística de ventas</h1>
-      <p class="text-muted mb-0">Resumen mensual de ventas pagadas y pendientes.</p>
+      <h1 class="h2 mb-1">Estadística</h1>
     </div>
     <button type="button" class="btn btn-outline-secondary" (click)="volverAlInicio()">
       <i class="bi bi-arrow-left"></i> Volver al panel
@@ -26,41 +25,73 @@
     No hay ventas registradas para mostrar.
   </div>
 
-  <div *ngIf="resumenMensual.length" class="table-responsive sales-summary">
-    <table class="table table-sm small table-hover align-middle">
-      <thead class="table-dark">
-        <tr>
-          <th>Mes</th>
-          <th>Vtas</th>
-          <th class="text-success">Pag.</th>
-          <th class="text-danger">Pen</th>
+  <section class="mb-4" aria-labelledby="valoracion-productos-title">
+    <h2 id="valoracion-productos-title" class="h5 mb-3">Valoración de productos activos</h2>
+    <div *ngIf="cargandoValoracion" class="text-muted">Cargando valoración...</div>
+    <div *ngIf="!cargandoValoracion && mensajeErrorValoracion" class="alert alert-danger" role="alert">
+      {{ mensajeErrorValoracion }}
+    </div>
+    <div *ngIf="!cargandoValoracion && !mensajeErrorValoracion" class="table-responsive">
+      <table class="table table-sm table-bordered align-middle mb-0">
+        <thead class="table-dark">
+          <tr>
+            <th>Productos activos</th>
+            <th>Unidades en stock</th>
+            <th>Valor precio compra</th>
+            <th>Valor precio venta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ valoracionProductos.productos }}</td>
+            <td>{{ valoracionProductos.unidades }}</td>
+            <td>{{ valoracionProductos.valorCompra | currency }}</td>
+            <td class="fw-bold text-success">{{ valoracionProductos.valorVenta | currency }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let resumen of resumenMensual">
-          <th scope="row" class="text-capitalize">{{ resumen.mes }}</th>
-          <td scope="row"><span class="badge text-bg-secondary">{{ resumen.ventas }}</span> <br>{{ resumen.importeTotal | currency }}</td>
-          <td scope="row"><span class="badge text-bg-success">{{ resumen.pagadas }}</span> <br>{{ resumen.importePagado | currency }}</td>
-          <td scope="row"><span class="badge text-bg-danger">{{ resumen.pendientes }}</span><br>{{ resumen.importePendiente | currency }}</td>
+  <section aria-labelledby="resumen-ventas-title">
+    <h2 id="resumen-ventas-title" class="h5 mb-3">Resumen de ventas por mes</h2>
+  
+    <div *ngIf="resumenMensual.length" class="table-responsive sales-summary">
+      <table class="table table-sm small table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Mes</th>
+            <th>Vtas</th>
+            <th class="text-success">Pag.</th>
+            <th class="text-danger">Pen</th>
 
-        </tr>
-        <tr class="table-secondary fw-bold">
-          <th scope="row">{{ totalGeneral.mes }}</th>
-          <td><span class="badge text-bg-secondary">{{ totalGeneral.ventas }} <br> {{ totalGeneral.importeTotal | currency }}</span></td>
-          <td><span class="badge text-bg-success">{{ totalGeneral.pagadas }} <br>{{ totalGeneral.importePagado | currency }}</span></td>
-          <td>
-            <button type="button" class="badge text-bg-danger border-0" title="Ver detalles pendientes"
-              (click)="alternarDetallesPendientes()">
-              {{ totalGeneral.pendientes }} <br>{{ totalGeneral.importePendiente | currency }}
-            </button>
-          </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let resumen of resumenMensual">
+            <th scope="row" class="text-capitalize">{{ resumen.mes }}</th>
+            <td scope="row"><span class="badge text-bg-secondary">{{ resumen.ventas }}</span> <br>{{ resumen.importeTotal | currency }}</td>
+            <td scope="row"><span class="badge text-bg-success">{{ resumen.pagadas }}</span> <br>{{ resumen.importePagado | currency }}</td>
+            <td scope="row"><span class="badge text-bg-danger">{{ resumen.pendientes }}</span><br>{{ resumen.importePendiente | currency }}</td>
 
-        </tr>
-      </tbody>
-    </table>
+          </tr>
+          <tr class="table-secondary fw-bold">
+            <th scope="row">{{ totalGeneral.mes }}</th>
+            <td><span class="badge text-bg-secondary">{{ totalGeneral.ventas }} <br> {{ totalGeneral.importeTotal | currency }}</span></td>
+            <td><span class="badge text-bg-success">{{ totalGeneral.pagadas }} <br>{{ totalGeneral.importePagado | currency }}</span></td>
+            <td>
+              <button type="button" class="badge text-bg-danger border-0" title="Ver detalles pendientes"
+                (click)="alternarDetallesPendientes()">
+                {{ totalGeneral.pendientes }} <br>{{ totalGeneral.importePendiente | currency }}
+              </button>
+            </td>
 
-  </div>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </section>
 
   <div *ngIf="mostrarDetallesPendientes" class="pending-modal" role="dialog" aria-modal="true"
     aria-labelledby="pending-modal-title" (click)="alternarDetallesPendientes()">
