@@ -278,11 +278,14 @@ export class PersonaForm {
     documento.setFontSize(14);
     agregarTexto('INFORMACION DEL CLIENTE', 8);
     documento.setFontSize(10);
+    documento.setFont('helvetica', 'bold');
     agregarTexto([
       `Apellido: ${this.persona.apellido || '-'}`,
       `Nombres: ${this.persona.nombres || '-'}`,
-      `DNI: ${this.persona.dni || '-'}`
+      `DNI: ${this.persona.dni || '-'}`,
+      `Saldo Total: ${this.formatearImporte(this.totalAdeudado)}`
     ].join(' | '), 8);
+    documento.setFont('helvetica', 'normal');
 
     documento.setFontSize(12);
     agregarTexto(fechaDesde ? `VENTAS DESDE ${fechaTexto}` : 'VENTAS', 5);
@@ -290,12 +293,11 @@ export class PersonaForm {
     if (ventas.length) {
       ventas.forEach(detalle => {
         agregarTexto([
-          `ID: ${detalle.id}`,
-          `Producto: ${detalle.producto?.nombre || '-'}`,
-          `Cantidad: ${detalle.cantidad}`,
+          `ID: ${detalle.id} . `,
+          `${detalle.estadopago || '-'}`,
+          `${detalle.cantidad} ${detalle.producto?.nombre || '-'}`,
           `Venta: ${this.formatearImporte(detalle.precioventa)}`,
-          `Fecha: ${this.formatearFecha(detalle.fecha)}`,
-          `Estado: ${detalle.estadopago || '-'}`
+          `${this.formatearFecha(detalle.fecha)}`
         ].join(' | '), 4);
       });
     } else {
