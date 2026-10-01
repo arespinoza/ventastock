@@ -85,7 +85,14 @@
                         <div class="mt-auto">
                             <div>
                                 <small class="text-secondary d-block">Precio de venta</small>
-                                <strong class="fs-4 text-success">{{producto.precioventa | currency}}</strong>
+                                <div class="d-flex align-items-center justify-content-between gap-2">
+                                    <strong class="fs-5 text-success">{{producto.precioventa | currency}}</strong>
+                                    <button type="button" class="btn btn-outline-success btn-sm flex-shrink-0"
+                                        title="Compartir por WhatsApp" aria-label="Compartir {{producto.nombre}} por WhatsApp"
+                                        (click)="compartirPorWhatsApp(producto)">
+                                        <i class="bi bi-whatsapp" aria-hidden="true"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

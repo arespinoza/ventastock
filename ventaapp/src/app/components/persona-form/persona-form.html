@@ -171,7 +171,7 @@
                                             <th scope="col">ID</th>
                                             <th scope="col">Monto</th>
                                             <th scope="col">Fecha</th>
-                                            <th scope="col">Pago</th>
+                                            <th scope="col">Pgo</th>
                                             <th scope="col">Accion</th>
                                         </tr>
                                     </thead>
@@ -184,8 +184,8 @@
                                                 {{importe.principal}}<span class="decimal-subindice">,{{importe.decimales}}</span>
                                             </ng-container>
                                         </td>
-                                        <td>{{abono.fecha | date:'dd/MM/yy HH:mm'}}</td>
-                                        <td>{{abono.metodopago}}</td>
+                                        <td>{{abono.fecha | date:'dd/MM/yy'}} <span style="font-size: 0.75em; vertical-align: baseline;">{{abono.fecha | date:'HH:mm'}}</span></td>
+                                        <td>{{abono.metodopago | slice:0:4}}</td>
                                         <td class="text-nowrap">
                                         <button type="button" class="btn btn-warning btn-sm me-1" title="Editar abono" (click)="editarAbono(abono.id)">
                                             <i class="bi bi-pencil-square"></i>

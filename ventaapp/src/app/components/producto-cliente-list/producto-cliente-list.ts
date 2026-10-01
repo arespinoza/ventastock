@@ -100,6 +100,42 @@ export class ProductoClienteList {
     this.fotoAmpliada = foto;
   }
 
+  async compartirPorWhatsApp(producto: any) {
+    const precio = new Intl.NumberFormat('es-AR', {
+      style: 'currency',
+      currency: 'ARS'
+    }).format(Number(producto.precioventa) || 0);
+    const informacionProducto = `Producto: ${producto.nombre}\nPrecio: ${precio}`;
+
+    if (producto.foto && navigator.share && navigator.canShare) {
+      try {
+        const respuesta = await fetch(producto.foto);
+        const imagen = await respuesta.blob();
+        const extension = imagen.type.split('/')[1] || 'jpg';
+        const archivo = new File([imagen], `producto-${producto.id}.${extension}`, {
+          type: imagen.type
+        });
+
+        if (navigator.canShare({ files: [archivo] })) {
+          await navigator.share({
+            files: [archivo],
+            text: informacionProducto,
+            title: producto.nombre
+          });
+          return;
+        }
+      } catch {
+        // Continúa con el enlace de WhatsApp si no se puede adjuntar la imagen.
+      }
+    }
+
+    const mensajeWhatsApp = producto.foto
+      ? `${informacionProducto}\nFoto: ${producto.foto}`
+      : informacionProducto;
+    const urlWhatsApp = `https://wa.me/?text=${encodeURIComponent(mensajeWhatsApp)}`;
+    window.open(urlWhatsApp, '_blank', 'noopener,noreferrer');
+  }
+
   cerrarFoto() {
     this.fotoAmpliada = null;
   }
