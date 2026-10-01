@@ -153,19 +153,11 @@ export class PersonaForm {
   }
 
   obtenerPrecioMovimiento(detalle: Abono['detallesMovimiento'][number]): number {
-    const precioIncluido = detalle.tipo === 'compra'
-      ? detalle.preciocompra
-      : detalle.precioventa;
-    if (precioIncluido !== undefined) {
-      return precioIncluido;
-    }
-
+    console.log('obtenerPrecioMovimiento - detalle:', detalle);
     const detalleMovimiento = this.detallesMovimientos.find(item =>
       item.id === (detalle.id || detalle.detalleMovimientoId)
     );
-    return detalleMovimiento?.tipo === 'compra'
-      ? detalleMovimiento.preciocompra
-      : detalleMovimiento?.precioventa || 0;
+    return detalle.subtotal ?? detalleMovimiento?.subtotal ?? 0;
   }
 
   abonoMenorQuePrecio(detalle: Abono['detallesMovimiento'][number]): boolean {

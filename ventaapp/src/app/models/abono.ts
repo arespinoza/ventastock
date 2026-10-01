@@ -11,8 +11,10 @@ export class Abono {
     detalleMovimientoId: number;
     montoAplicado: number;
     id?: number;
+    cantidad?: number;
     producto?: { nombre: string };
     tipo?: string;
+    subtotal?: number;
     preciocompra?: number;
     precioventa?: number;
     AbonoDetalleMovimiento?: { montoAplicado: number };

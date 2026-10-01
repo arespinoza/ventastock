@@ -111,10 +111,9 @@
                                         <tr >
                                             <th scope="col">ID</th>
                                             <th scope="col">Producto</th>
-                                            <th scope="col">Cn</th>
-                                            <th scope="col">$Venta</th>
+                                            <th scope="col">$ Venta</th>
                                             <th scope="col">Fecha</th>
-                                            <th scope="col">Acciones</th>
+                                            <th scope="col">Accion</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -128,10 +127,10 @@
                                                     'text-success fw-bold': dm.estadopago === 'pagado'
                                                 }">[{{dm.estadopago?.substring(0, 3)}}]</span>
                                             </td>
-                                            <td>{{dm.cantidad}}</td>
                                             <td>
                                                 <ng-container *ngIf="formatearImporteTabla(dm.precioventa) as importe">
-                                                    {{importe.principal}}<span class="decimal-subindice">,{{importe.decimales}}</span>
+                                                    <span style="font-size: 0.75em;">({{dm.cantidad}}) {{importe.principal.replace('$', '').trim()}}</span><span class="decimal-subindice">,{{importe.decimales}}</span>
+                                                    <div class="fw-bold">{{dm.cantidad * dm.precioventa | currency}}</div>
                                                 </ng-container>
                                             </td>
                                             <td>{{dm.fecha | date:'dd/MM/yy HH:mm'}}</td>
