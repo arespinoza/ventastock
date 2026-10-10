@@ -15,7 +15,7 @@
                             <h5>Gestion Persona</h5>
                         </div>
                         <div class="col-6 bg-warning bg-opacity-25 text-end">
-                            <div class=" text-uppercase">Saldo : {{totalAdeudado | currency}}</div>
+                            <div class=" text-uppercase">Saldo : {{formatearImporte(totalAdeudado)}}</div>
                         </div> 
                     </div>
 
@@ -128,15 +128,14 @@
                                                 }">[{{dm.estadopago?.substring(0, 3)}}]</span>
                                             </td>
                                             <td>
-                                                <ng-container *ngIf="formatearImporteTabla(dm.precioventa) as importe">
-                                                    <span style="font-size: 0.75em;">({{dm.cantidad}}) {{importe.principal.replace('$', '').trim()}}</span><span class="decimal-subindice">,{{importe.decimales}}</span>
-                                                    <div class="fw-bold">{{dm.cantidad * dm.precioventa | currency}}</div>
-                                                </ng-container>
+                                                <span style="font-size: 0.75em;">({{dm.cantidad}}) {{formatearImporte(dm.precioventa).replace('$', '').trim()}}</span>
+                                                <div class="fw-bold">{{formatearImporte(dm.cantidad * dm.precioventa)}}</div>
                                             </td>
                                             <td>{{dm.fecha | date:'dd/MM/yy HH:mm'}}</td>
 
                             
                                             <td>
+                                                <div class="persona-action-buttons">
                                                 <button type="button" class="btn btn-warning btn-sm" title="Editar"
                                                     (click)="redirigir('/detalle-movimiento-form/' + dm.id + '?returnUrl=/persona-form/' + persona.id)">
                                                     <i class="bi bi-pencil-square" type="button"></i>
@@ -151,6 +150,7 @@
                                                     (click)="deleteDetalleMovimiento(dm.id)">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -179,19 +179,19 @@
                                     <tr class="mt-0 p-0">
                                         <th scope="row">{{abono.id}}</th>
                                         <td>
-                                            <ng-container *ngIf="formatearImporteTabla(abono.monto) as importe">
-                                                {{importe.principal}}<span class="decimal-subindice">,{{importe.decimales}}</span>
-                                            </ng-container>
+                                            {{formatearImporte(abono.monto)}}
                                         </td>
                                         <td>{{abono.fecha | date:'dd/MM/yy'}} <span style="font-size: 0.75em; vertical-align: baseline;">{{abono.fecha | date:'HH:mm'}}</span></td>
                                         <td>{{abono.metodopago | slice:0:4}}</td>
-                                        <td class="text-nowrap">
-                                        <button type="button" class="btn btn-warning btn-sm me-1" title="Editar abono" (click)="editarAbono(abono.id)">
+                                        <td>
+                                        <div class="persona-action-buttons">
+                                        <button type="button" class="btn btn-warning btn-sm" title="Editar abono" (click)="editarAbono(abono.id)">
                                             <i class="bi bi-pencil-square"></i>
                                         </button>
                                         <button type="button" class="btn btn-danger btn-sm" title="Eliminar abono" (click)="eliminarAbono(abono.id)">
                                             <i class="bi bi-trash"></i>
                                         </button>
+                                        </div>
                                         </td>
                                     </tr>
 
@@ -203,14 +203,10 @@
                                             #{{detalle.id || detalle.detalleMovimientoId}} - 
                                             {{obtenerNombreProducto(detalle)}} - 
                                             <span [class.text-danger]="abonoMenorQuePrecio(detalle)" [class.text-success]="abonoCompleto(detalle)">
-                                            <ng-container *ngIf="formatearImporteTabla(obtenerPrecioMovimiento(detalle)) as importe">
-                                                {{importe.principal}}<span class="decimal-subindice">,{{importe.decimales}}</span>
-                                            </ng-container>
+                                            {{formatearImporte(obtenerPrecioMovimiento(detalle))}}
                                             </span> - 
                                             Abona:
-                                            <ng-container *ngIf="formatearImporteTabla(detalle.montoAplicado ?? detalle.AbonoDetalleMovimiento?.montoAplicado) as importe">
-                                                {{importe.principal}}<span class="decimal-subindice">,{{importe.decimales}}</span>
-                                            </ng-container>
+                                            {{formatearImporte(detalle.montoAplicado ?? detalle.AbonoDetalleMovimiento?.montoAplicado)}}
                                         </div>
                                         </td>
                                     </tr>

@@ -275,7 +275,7 @@ export class PersonaForm {
       `Apellido: ${this.persona.apellido || '-'}`,
       `Nombres: ${this.persona.nombres || '-'}`,
       `DNI: ${this.persona.dni || '-'}`,
-      `Saldo Total: ${this.formatearImporte(this.totalAdeudado)}`
+      `Saldo Total: ${this.formatearImportePdf(this.totalAdeudado)}`
     ].join(' | '), 8);
     documento.setFont('helvetica', 'normal');
 
@@ -288,7 +288,7 @@ export class PersonaForm {
           `ID: ${detalle.id} . `,
           `${detalle.estadopago || '-'}`,
           `${detalle.cantidad} ${detalle.producto?.nombre || '-'}`,
-          `Venta: ${this.formatearImporte(detalle.precioventa)}`,
+          `Venta: ${this.formatearImportePdf(detalle.precioventa)}`,
           `${this.formatearFecha(detalle.fecha)}`
         ].join(' | '), 4);
       });
@@ -303,7 +303,7 @@ export class PersonaForm {
       abonos.forEach(abono => {
         agregarTexto([
           `ID: ${abono.id}`,
-          `Monto: ${this.formatearImporte(abono.monto)}`,
+          `Monto: ${this.formatearImportePdf(abono.monto)}`,
           `Fecha: ${this.formatearFecha(abono.fecha)}`,
           `Pago: ${abono.metodopago || '-'}`
         ].join(' | '), 2);
@@ -312,8 +312,8 @@ export class PersonaForm {
           agregarTexto([
             `  #${detalle.id || detalle.detalleMovimientoId}`,
             this.obtenerNombreProducto(detalle),
-            this.formatearImporte(this.obtenerPrecioMovimiento(detalle)),
-            `Abona: ${this.formatearImporte(detalle.montoAplicado ?? detalle.AbonoDetalleMovimiento?.montoAplicado)}`
+            this.formatearImportePdf(this.obtenerPrecioMovimiento(detalle)),
+            `Abona: ${this.formatearImportePdf(detalle.montoAplicado ?? detalle.AbonoDetalleMovimiento?.montoAplicado)}`
           ].join(' - '), 4);
         });
       });
@@ -349,25 +349,17 @@ export class PersonaForm {
       && fechaRegistro >= fechaInicial;
   }
 
-  private formatearImporte(valor: number | undefined): string {
-    return `$${Number(valor || 0).toFixed(2)}`;
-  }
-
-  formatearImporteTabla(valor: number | undefined): { principal: string; decimales: string } {
-    const partes = new Intl.NumberFormat('es-AR', {
+  formatearImporte(valor: number | undefined): string {
+    return new Intl.NumberFormat('es-AR', {
       style: 'currency',
       currency: 'ARS',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).formatToParts(Number(valor || 0));
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(Number(valor || 0));
+  }
 
-    return {
-      principal: partes
-        .filter(parte => parte.type !== 'decimal' && parte.type !== 'fraction')
-        .map(parte => parte.value)
-        .join(''),
-      decimales: partes.find(parte => parte.type === 'fraction')?.value || '00'
-    };
+  private formatearImportePdf(valor: number | undefined): string {
+    return `$${Number(valor || 0).toFixed(2)}`;
   }
 
   private formatearFecha(fecha: string): string {
