@@ -103,7 +103,9 @@ export class ProductoClienteList {
   async compartirPorWhatsApp(producto: any) {
     const precio = new Intl.NumberFormat('es-AR', {
       style: 'currency',
-      currency: 'ARS'
+      currency: 'ARS',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
     }).format(Number(producto.precioventa) || 0);
     const informacionProducto = `Producto: ${producto.nombre}\nPrecio: ${precio}`;
 

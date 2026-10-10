@@ -86,8 +86,14 @@ export class ProductoList {
   }
 
   async compartirPorWhatsApp(producto: any) {
+    const precio = new Intl.NumberFormat('es-AR', {
+      style: 'currency',
+      currency: 'ARS',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(Number(producto.precioventa) || 0);
     const informacionProducto = [
-      `Producto: ${producto.nombre} $${Number(producto.precioventa).toFixed(0)}`
+      `Producto: ${producto.nombre} ${precio}`
     ].join('\n');
 
     if (producto.foto && navigator.share && navigator.canShare) {
