@@ -128,9 +128,9 @@
                                                 }">[{{dm.estadopago?.substring(0, 3)}}]</span>
                                             </td>
                                             <td>
-                                                <span style="font-size: 0.75em;">({{dm.cantidad}}) {{formatearImporte(dm.precioventa).replace('$', '').trim()}}</span>
+                                                <span style="font-size: 0.6em;">({{dm.cantidad}}) {{formatearImporte(dm.precioventa).replace('$', '').trim()}}</span>
                                                 <div class="fw-bold">{{formatearImporte(dm.cantidad * dm.precioventa)}}</div>
-                                                <div style="font-size: 0.75em;" [class.text-danger]="(dm.cantidad * dm.precioventa) - obtenerAdelantosDetalle(dm.id) > 0">
+                                                <div style="font-size: 0.6em;" [class.text-danger]="(dm.cantidad * dm.precioventa) - obtenerAdelantosDetalle(dm.id) > 0">
                                                     {{ formatearImporte((dm.cantidad * dm.precioventa) - obtenerAdelantosDetalle(dm.id))}} Sd
                                                 </div>
                                             </td>
