@@ -141,6 +141,14 @@ export class PersonaForm {
       }, 0);
   }
 
+  obtenerAdelantosDetalle(detalleMovimientoId: number): number {
+    return this.abonos.reduce((total, abono) =>
+      total + abono.detallesMovimiento
+       .filter(aplicacion => (aplicacion.id ?? aplicacion.detalleMovimientoId) === detalleMovimientoId)
+       .reduce((totalAplicado, aplicacion) =>
+         totalAplicado + Number(aplicacion.montoAplicado ?? aplicacion.AbonoDetalleMovimiento?.montoAplicado ?? 0), 0), 0);
+  }
+
   obtenerNombreProducto(detalle: Abono['detallesMovimiento'][number]): string {
     if (detalle.producto?.nombre) {
       return detalle.producto.nombre;

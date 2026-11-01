@@ -130,6 +130,9 @@
                                             <td>
                                                 <span style="font-size: 0.75em;">({{dm.cantidad}}) {{formatearImporte(dm.precioventa).replace('$', '').trim()}}</span>
                                                 <div class="fw-bold">{{formatearImporte(dm.cantidad * dm.precioventa)}}</div>
+                                                <div style="font-size: 0.75em;" [class.text-danger]="(dm.cantidad * dm.precioventa) - obtenerAdelantosDetalle(dm.id) > 0">
+                                                    {{ formatearImporte((dm.cantidad * dm.precioventa) - obtenerAdelantosDetalle(dm.id))}} ADD
+                                                </div>
                                             </td>
                                             <td>{{dm.fecha | date:'dd/MM/yy HH:mm'}}</td>
 
