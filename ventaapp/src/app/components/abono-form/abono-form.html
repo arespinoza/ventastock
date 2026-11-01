@@ -67,9 +67,11 @@
 									<select [id]="'detalleMovimientoId-' + indice" [name]="'detalleMovimientoId-' + indice"
 										class="form-select" [(ngModel)]="aplicacion.detalleMovimientoId" required>
 										<option [ngValue]="0" disabled>Seleccione un detalle</option>
-										<option *ngFor="let detalle of detallesMovimiento" [ngValue]="detalle.id">
-											#{{ detalle.id }} - {{ detalle.producto.nombre }} - {{ detalle.precioventa | currency }}
-										</option>
+										<ng-container *ngFor="let detalle of detallesMovimiento">
+											<option *ngIf="detalle.estadopago === 'pendiente'" [ngValue]="detalle.id">
+												#{{ detalle.id }} &nbsp; ({{detalle.cantidad}}) {{ detalle.producto.nombre }}   {{ detalle.subtotal | currency }} &nbsp;&nbsp; <span class="text-danger">[{{ (detalle.subtotal-(obtenerAdelantosDetalle(detalle.id))) | currency }} sd]</span>
+											</option>
+										</ng-container>
 									</select>
 								</div>
 								<div class="col-md-4">

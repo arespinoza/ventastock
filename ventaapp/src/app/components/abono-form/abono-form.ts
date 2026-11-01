@@ -21,6 +21,7 @@ export class AbonoForm {
 	abono = new Abono();
 	personas: Persona[] = [];
 	detallesMovimiento: DetalleMovimiento[] = [];
+	abonosPersona: Abono[] = [];
 	rutaRetorno = '/abono-list';
 
 	constructor(
@@ -80,8 +81,17 @@ export class AbonoForm {
 	cargarDetallesMovimiento(personaId: number, conservarAplicaciones = true) {
 		if (!personaId) {
 			this.detallesMovimiento = [];
+			this.abonosPersona = [];
 			return;
 		}
+
+		this.abonoApi.getAbonos(undefined, personaId).subscribe({
+			next: abonos => {
+				this.abonosPersona = abonos as Abono[];
+				this.cd.detectChanges();
+			},
+			error: () => this.toast.show('No se pudieron cargar los adelantos de la persona', 'error')
+		});
 
 		this.detalleMovimientoApi.getDetallesMovimientoPersona(personaId).subscribe({
 			next: detalles => {
@@ -116,6 +126,18 @@ export class AbonoForm {
 		if (this.abono.detallesMovimiento.length > 1) {
 			this.abono.detallesMovimiento.splice(indice, 1);
 		}
+	}
+
+	obtenerAdelantosDetalle(detalleMovimientoId: number): number {
+		return this.abonosPersona.reduce((total, abono) =>
+			total + (abono.detallesMovimiento || [])
+				.filter(aplicacion =>
+					(aplicacion.id ?? aplicacion.detalleMovimientoId) === detalleMovimientoId
+				)
+				.reduce((totalAplicado, aplicacion) =>
+					totalAplicado + Number(
+						aplicacion.montoAplicado ?? aplicacion.AbonoDetalleMovimiento?.montoAplicado ?? 0
+					), 0), 0);
 	}
 
 	totalAplicado() {
